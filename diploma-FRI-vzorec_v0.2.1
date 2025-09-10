@@ -1,0 +1,557 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% datoteka diploma-FRI-vzorec.tex
+%
+% vzorčna datoteka za pisanje diplomskega dela v formatu LaTeX
+% na UL Fakulteti za računalništvo in informatiko
+%
+% na osnovi starejših verzij vkup spravil Franc Solina, maj 2021
+% prvo verzijo je leta 2010 pripravil Gašper Fijavž
+%
+% za upravljanje z literaturo ta vezija uporablja BibLaTeX
+%
+% svetujemo uporabo Overleaf.com - na tej spletni implementaciji LaTeXa ta vzorec zagotovo pravilno deluje
+%
+
+\documentclass[a4paper,12pt,openright]{book}
+%\documentclass[a4paper, 12pt, openright, draft]{book}  Nalogo preverite tudi z opcijo draft, ki pokaže, katere vrstice so predolge! Pozor, v draft opciji, se slike ne pokažejo!
+ 
+\usepackage[utf8]{inputenc}   % omogoča uporabo slovenskih črk kodiranih v formatu UTF-8
+\usepackage[slovene,english]{babel}    % naloži, med drugim, slovenske delilne vzorce
+\usepackage[pdftex]{graphicx}  % omogoča vlaganje slik različnih formatov
+\usepackage{fancyhdr}          % poskrbi, na primer, za glave strani
+\usepackage{amssymb}           % dodatni matematični simboli
+\usepackage{amsmath}           % eqref, npr.
+\usepackage{hyperxmp}
+\usepackage[hyphens]{url}
+\usepackage{csquotes}
+\usepackage[pdftex, colorlinks=true,
+						citecolor=black, filecolor=black, 
+						linkcolor=black, urlcolor=black,
+						pdfproducer={LaTeX}, pdfcreator={LaTeX}]{hyperref}
+
+\usepackage{color}
+\usepackage{soul}
+
+\usepackage[
+backend=biber,
+style=numeric,
+sorting=nty,
+]{biblatex}
+
+
+\addbibresource{literatura.bib} %Imports bibliography file
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	DIPLOMA INFO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\ttitle}{Avtomatizirano spletno strganje podatkov o javni električni infrastrukturi v Združenem kraljestvu}
+\newcommand{\ttitleEn}{Automated Web Scraping of Public Electrical Infrastructure Data in the United Kingdom}
+\newcommand{\tsubject}{\ttitle}
+\newcommand{\tsubjectEn}{\ttitleEn}
+\newcommand{\tauthor}{Dominik Uršič}
+\newcommand{\tkeywords}{spletno strganje, avtomatizacija, podatkovni cevovodi, električna infrastruktura, National Grid}
+\newcommand{\tkeywordsEn}{web scraping, automation, data pipelines, electrical infrastructure, National Grid}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	HYPERREF SETUP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypersetup{pdftitle={\ttitle}}
+\hypersetup{pdfsubject=\ttitleEn}
+\hypersetup{pdfauthor={\tauthor}}
+\hypersetup{pdfkeywords=\tkeywordsEn}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% postavitev strani
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+\addtolength{\marginparwidth}{-20pt} % robovi za tisk
+\addtolength{\oddsidemargin}{40pt}
+\addtolength{\evensidemargin}{-40pt}
+
+\renewcommand{\baselinestretch}{1.3} % ustrezen razmik med vrsticami
+\setlength{\headheight}{15pt}        % potreben prostor na vrhu
+\renewcommand{\chaptermark}[1]%
+{\markboth{\MakeUppercase{\thechapter.\ #1}}{}} \renewcommand{\sectionmark}[1]%
+{\markright{\MakeUppercase{\thesection.\ #1}}} \renewcommand{\headrulewidth}{0.5pt} \renewcommand{\footrulewidth}{0pt}
+\fancyhf{}
+\fancyhead[LE,RO]{\sl \thepage} 
+%\fancyhead[LO]{\sl \rightmark} \fancyhead[RE]{\sl \leftmark}
+\fancyhead[RE]{\sc \tauthor}              % dodal Solina
+\fancyhead[LO]{\sc Diplomska naloga}     % dodal Solina
+
+
+\newcommand{\BibLaTeX}{{\sc Bib}\LaTeX}
+\newcommand{\BibTeX}{{\sc Bib}\TeX}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% naslovi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+\newcommand{\autfont}{\Large}
+\newcommand{\titfont}{\LARGE\bf}
+\newcommand{\clearemptydoublepage}{\newpage{\pagestyle{empty}\cleardoublepage}}
+\setcounter{tocdepth}{1}	      % globina kazala
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% konstrukti
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+\newtheorem{izrek}{Izrek}[chapter]
+\newtheorem{trditev}{Trditev}[izrek]
+\newenvironment{dokaz}{\emph{Dokaz.}\ }{\hspace{\fill}{$\Box$}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PDF-A
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% define medatata
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\def\Title{\ttitle}
+\def\Author{\tauthor, du3065@student.uni-lj.si}
+\def\Subject{\ttitleEn}
+\def\Keywords{\tkeywordsEn}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \convertDate converts D:20080419103507+02'00' to 2008-04-19T10:35:07+02:00
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\def\convertDate{%
+    \getYear
+}
+
+{\catcode`\D=12
+ \gdef\getYear D:#1#2#3#4{\edef\xYear{#1#2#3#4}\getMonth}
+}
+\def\getMonth#1#2{\edef\xMonth{#1#2}\getDay}
+\def\getDay#1#2{\edef\xDay{#1#2}\getHour}
+\def\getHour#1#2{\edef\xHour{#1#2}\getMin}
+\def\getMin#1#2{\edef\xMin{#1#2}\getSec}
+\def\getSec#1#2{\edef\xSec{#1#2}\getTZh}
+\def\getTZh +#1#2{\edef\xTZh{#1#2}\getTZm}
+\def\getTZm '#1#2'{%
+    \edef\xTZm{#1#2}%
+    \edef\convDate{\xYear-\xMonth-\xDay T\xHour:\xMin:\xSec+\xTZh:\xTZm}%
+}
+
+%\expandafter\convertDate\pdfcreationdate 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% get pdftex version string
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newcount\countA
+\countA=\pdftexversion
+\advance \countA by -100
+\def\pdftexVersionStr{pdfTeX-1.\the\countA.\pdftexrevision}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% XMP data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+\usepackage{xmpincl}
+%\includexmp{pdfa-1b}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% pdfInfo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+\pdfinfo{%
+    /Title    (\ttitle)
+    /Author   (\tauthor, du3065@student.uni-lj.si)
+    /Subject  (\ttitleEn)
+    /Keywords (\tkeywordsEn)
+    /ModDate  (\pdfcreationdate)
+    /Trapped  /False
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% znaki za copyright stran
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+\newcommand{\CcImageCc}[1]{%
+	\includegraphics[scale=#1]{cc_cc_30.pdf}%
+}
+\newcommand{\CcImageBy}[1]{%
+	\includegraphics[scale=#1]{cc_by_30.pdf}%
+}
+\newcommand{\CcImageSa}[1]{%
+	\includegraphics[scale=#1]{cc_sa_30.pdf}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\selectlanguage{slovene}
+\frontmatter
+\setcounter{page}{1} %
+\renewcommand{\thepage}{}       % preprečimo težave s številkami strani v kazalu
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%naslovnica
+ \thispagestyle{empty}%
+   \begin{center}
+    {\large\sc Univerza v Ljubljani\\%
+%      Fakulteta za elektrotehniko\\% za študijski program Multimedija
+%      Fakulteta za upravo\\% za študijski program Upravna informatika
+      Fakulteta za računalništvo in informatiko\\%
+%      Fakulteta za matematiko in fiziko\\% za študijski program Računalništvo in matematika
+     }
+    \vskip 10em%
+    {\autfont \tauthor\par}%
+    {\titfont \ttitle \par}%
+    {\vskip 3em \textsc{DIPLOMSKO DELO\\[5mm]         % dodal Solina za ostale študijske programe
+%    VISOKOŠOLSKI STROKOVNI ŠTUDIJSKI PROGRAM\\ PRVE STOPNJE\\ RAČUNALNIŠTVO IN INFORMATIKA}\par}%
+     UNIVERZITETNI  ŠTUDIJSKI PROGRAM\\ PRVE STOPNJE\\ RAČUNALNIŠTVO IN INFORMATIKA}\par}%
+%    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ MULTIMEDIJA}\par}%
+%    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ UPRAVNA INFORMATIKA}\par}%
+%    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ RAČUNALNIŠTVO IN MATEMATIKA}\par}%
+    \vfill\null%
+% izberite pravi habilitacijski naziv mentorja!
+    {\large \textsc{Mentor}: izr. prof. dr. Matjaž Kukar\par}%
+%   {\large \textsc{Somentor}:  viš. pred./doc./izr. prof./prof. dr.  Martin Krpan \par}%
+    {\vskip 2em \large Ljubljana, \the\year \par}%
+\end{center}
+% prazna stran
+%\clearemptydoublepage      
+% izjava o licencah itd. se izpiše na hrbtni strani naslovnice
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%copyright stran
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\thispagestyle{empty}
+
+\vspace*{5cm}
+{\small \noindent
+To delo je ponujeno pod licenco \textit{Creative Commons Priznanje avtorstva-Deljenje pod enakimi pogoji 2.5 Slovenija} (ali novej\v so razli\v cico).
+To pomeni, da se tako besedilo, slike, grafi in druge sestavine dela kot tudi rezultati diplomskega dela lahko prosto distribuirajo,
+reproducirajo, uporabljajo, priobčujejo javnosti in predelujejo, pod pogojem, da se jasno in vidno navede avtorja in naslov tega
+dela in da se v primeru spremembe, preoblikovanja ali uporabe tega dela v svojem delu, lahko distribuira predelava le pod
+licenco, ki je enaka tej.
+Podrobnosti licence so dostopne na spletni strani \href{http://creativecommons.si}{creativecommons.si} ali na Inštitutu za
+intelektualno lastnino, Streliška 1, 1000 Ljubljana.
+
+\vspace*{1cm}
+\begin{center}% 0.66 / 0.89 = 0.741573033707865
+\CcImageCc{0.741573033707865}\hspace*{1ex}\CcImageBy{1}\hspace*{1ex}\CcImageSa{1}%
+\end{center}
+}
+
+\vspace*{1cm}
+{\small \noindent
+Izvorna koda diplomskega dela, njeni rezultati in v ta namen razvita programska oprema je ponujena pod licenco GNU General Public License,
+različica 3 (ali novejša). To pomeni, da se lahko prosto distribuira in/ali predeluje pod njenimi pogoji.
+Podrobnosti licence so dostopne na spletni strani \url{http://www.gnu.org/licenses/}.
+}
+
+\vfill
+\begin{center} 
+\ \\ \vfill
+{\em
+Besedilo je oblikovano z urejevalnikom besedil \LaTeX.}
+\end{center}
+
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% stran 3 med uvodnimi listi
+\thispagestyle{empty}
+\
+\vfill
+
+\bigskip
+\noindent\textbf{Kandidat:} Dominik Uršič\\
+\noindent\textbf{Naslov:} Avtomatizirano spletno strganje podatkov o javni električni infrastrukturi v Združenem kraljestvu\\
+% vstavite ustrezen naziv študijskega programa!
+\noindent\textbf{Vrsta naloge:} Diplomska naloga na univerzitetnem programu prve stopnje Računalništvo in informatika \\
+% izberite pravi habilitacijski naziv mentorja!
+\noindent\textbf{Mentor:} izr. prof. dr. Matjaž Kukar\\
+%\noindent\textbf{Somentor:} isto kot za mentorja
+
+\bigskip
+\noindent\textbf{Opis:}\\
+Cilj diplomske naloge je razvoj in implementacija avtomatiziranega sistema za pridobivanje, obdelavo in shranjevanje podatkov o javni električni infrastrukturi v Združenem kraljestvu (UK), s poudarkom na podatkih distributerja National Grid (NG). Sistem bo redno prenašal javno dostopne Excel datoteke s spletne strani NG, jih shranjeval v Google Cloud Storage za arhiviranje, ter jih nato s pomočjo Python skripte obdelal. Posebna pozornost bo namenjena polju "Razpoložljiva kapaciteta" (Demand headroom) ta predstavlja razliko med zanesljivo nosilnostjo omrežnega elementa (transformatorska postaja) in pričakovano najvišjo obremenitvijo. Ta kazalnik določa, koliko dodatne električne moči lahko omrežje še prevzame, preden so potrebne infrastrukturne nadgradnje.. Obdelani podatki bodo naloženi v centralizirano podatkovno bazo PostgreSQL. Celoten proces bo avtomatiziran z uporabo Google Cron Job, ki bo skrbel za redno izvajanje, nadzor nad napakami in pošiljanje obvestil v Slack.
+
+\bigskip
+\noindent\textbf{Title:} Automated Web Scraping of Public Electrical Infrastructure Data in the United Kingdom
+
+\bigskip
+\noindent\textbf{Description:}\\
+The goal of this thesis is to develop and implement an automated system for acquiring, processing and storing data on public electrical infrastructure in the United Kingdom (UK), with emphasis on data from distributor National Grid (NG). The system will regularly download publicly available Excel files from the NG website, store them in Google Cloud Storage for archiving, and then process them using Python scripts. Special attention will be given to the Demand headroom field, which represents the difference between the reliable capacity of a network element (transformer station) and the expected peak load. Processed data will be loaded into a centralized PostgreSQL database. The entire process will be automated using Google Cron Job for regular execution, error monitoring and Slack notifications.
+
+\vfill
+
+\vspace{2cm}
+
+% prazna stran
+\clearemptydoublepage
+
+% zahvala
+\thispagestyle{empty}\mbox{}\vfill\null\it%
+\noindent
+Zahvaljujem se mentorju izr. prof. dr. Matjažu Kukarju za strokovno vodenje in podporo pri izdelavi diplomske naloge. Posebna zahvala gre tudi družini in prijateljem za razumevanje in spodbudo v času študija.
+\rm\normalfont
+
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% posvetilo, če sama zahvala ne zadošča :-)
+
+
+% prazna stran
+\clearemptydoublepage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% kazalo
+\pagestyle{empty}
+\def\thepage{}% preprečimo težave s številkami strani v kazalu
+\tableofcontents{}
+
+
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% seznam kratic
+
+\chapter*{Seznam uporabljenih kratic}
+
+\noindent\begin{tabular}{p{0.11\textwidth}|p{.39\textwidth}|p{.39\textwidth}}    % po potrebi razširi prvo kolono tabele na račun drugih dveh!
+  {\bf kratica} & {\bf angleško}                              & {\bf slovensko} \\ \hline
+  {\bf ETL}   & Extract, Transform, Load              & izluči, preoblikuj, naloži \\
+  {\bf GCP}   & Google Cloud Platform              & platforma Google Cloud \\
+  {\bf GCS}   & Google Cloud Storage              & shramba Google Cloud \\
+  {\bf NG}   & National Grid              & državno omrežje \\
+\end{tabular}
+
+
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% povzetek
+\phantomsection
+\addcontentsline{toc}{chapter}{Povzetek}
+\chapter*{Povzetek}
+
+\noindent\textbf{Naslov:} \ttitle
+\bigskip
+
+\noindent\textbf{Avtor:} \tauthor
+\bigskip
+
+%\noindent\textbf{Povzetek:} 
+\noindent Cilj diplomske naloge je razvoj in implementacija avtomatiziranega sistema za pridobivanje, obdelavo in shranjevanje podatkov o javni električni infrastrukturi v Združenem kraljestvu, s posebnim poudarkom na podatkih distributerja National Grid.
+Takšen sistem omogoča pregleden in enostaven dostop do ključnih informacij o električni infrastrukturi, kar je bistvenega pomena za podjetja, ki se ukvarjajo z nameščanjem električnih polnilnic. Dostop do celovitih podatkov o posameznih transformatorskih postajah namreč omogoča hitrejše in stroškovno učinkovitejše načrtovanje ter postavitev polnilne infrastrukture. Trenutno so ti podatki razpršeni po različnih virih, njihovo ročno zbiranje in posodabljanje pa je zamudno in podvrženo napakam. Sistem bo redno prenašal javno dostopne Excel datoteke s spletne strani National Grid, jih shranjeval v Google Cloud Storage za arhiviranje, ter jih nato s pomočjo Python skripte obdelal. Posebna pozornost bo namenjena polju "Demand Headroom", ki označuje razpoložljivo kapaciteto omrežnega elementa. Ta kazalnik predstavlja razliko med zanesljivo nosilnostjo posameznega omrežnega elementa in njegovo pričakovano najvišjo obremenitvijo ter tako določa maksimalno dodatno obremenitev, ki jo element še lahko prenese brez potrebe po infrastrukturnih nadgradnjah. Obdelani podatki bodo naloženi v centralizirano podatkovno bazo PostgreSQL. Celoten proces bo avtomatiziran z uporabo Google Cron Job, ki bo skrbel za redno izvajanje, nadzor nad napakami in pošiljanje obvestil v Slack. Sistem bo zasnovan po principu ETL (Extract, Transform, Load), kar bo zagotovilo enostavno vzdrževanje, ažurnost podatkov in zanesljivost za končne uporabnike.
+
+\bigskip
+
+\noindent\textbf{Ključne besede:} \tkeywords.
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% abstract
+\phantomsection
+\selectlanguage{english}
+\addcontentsline{toc}{chapter}{Abstract}
+\chapter*{Abstract}
+
+\noindent\textbf{Title:} \ttitleEn
+\bigskip
+
+\noindent\textbf{Author:} \tauthor
+\bigskip
+
+%\noindent\textbf{Abstract:} 
+\noindent The objective of this thesis is to develop and implement an automated system for acquiring, processing, and storing data on public electrical infrastructure in the United Kingdom, with particular emphasis on data from the distributor National Grid.
+Such a system enables clear and easy access to key information about electrical infrastructure, which is essential for companies involved in the installation of electric charging stations. Access to comprehensive data on individual transformer stations enables faster and more cost-effective planning and deployment of charging infrastructure. Currently, this data is scattered across various sources, and its manual collection and updating is time-consuming and error-prone. The system will regularly download publicly available Excel files from the National Grid website, store them in Google Cloud Storage for archiving, and then process them using Python scripts. Special attention will be given to the "Demand Headroom" field, which indicates the available capacity of a network element. This indicator represents the difference between the reliable capacity of an individual network element and its expected peak load, thus determining the maximum additional load that the element can still handle without requiring infrastructure upgrades. The processed data will be loaded into a centralized PostgreSQL database. The entire process will be automated using Google Cron Job, which will handle regular execution, error monitoring, and sending notifications to Slack. The system will be designed according to the ETL (Extract, Transform, Load) principle, ensuring easy maintenance, data currency, and reliability for end users.
+\bigskip
+
+\noindent\textbf{Keywords:} \tkeywordsEn.
+\selectlanguage{slovene}
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
+\setcounter{page}{1}
+\pagestyle{fancy}
+
+\chapter{Uvod}
+
+V sodobnem svetu se električna energija smatra za eno najpomembnejših infrastruktur, ki omogoča delovanje industrije, gospodinjstev in storitev. Zanesljiv dostop do ažurnih podatkov o električni infrastrukturi je ključen za različne analize, načrtovanje in sprejemanje odločitev na energetskem področju.
+
+V Združenem kraljestvu je National Grid eden pomembnejših operaterjev elektroenergetskega omrežja, ki pokriva geografska področja, vključno z regijami East Midlands, West Midlands, South Wales ter South West England. Kot ključni sistemski operater je National Grid odgovoren za distribucijo električne energije na svojem območju ter zagotavlja stabilno in zanesljivo oskrbo z električno energijo za milijone gospodinjstev in podjetij. Ti podatki so javno dostopni v obliki Excel datotek na njihovi spletni strani, vendar je njihovo ročno zbiranje in posodabljanje zamudno in podvrženo napakam.
+
+Diplomska naloga naslavlja problem neučinkovitega in neurejenega dostopa do podatkov o električni infrastrukturi z razvojem avtomatiziranega sistema za pridobivanje, obdelavo in shranjevanje podatkov National Grid. Sistem bo implementiran z uporabo modernih tehnologij in metod za obdelavo podatkov, vključno s spletnim strganjem, podatkovnimi cevovodi in računalništvom v oblaku.
+
+Glavni cilj naloge je razvoj in implementacija avtomatiziranega sistema, ki bo sposoben redno prenašati Excel datoteke s spletne strani National Grid, jih shranjevati v Google Cloud Storage, obdelovati s Python skriptami in nalagati v centralizirano PostgreSQL podatkovno bazo. Sistem bo zasnovan po principu ETL (Extract, Transform, Load) in bo vključeval mehanizme za kontrolo kakovosti podatkov ter avtomatsko obveščanje o stanju procesa.
+\section{Namen}
+
+Primarni namen sistema je \emph{avtomatizirati} zajem javno dostopnih podatkov National Grid Electricity Distribution (NGED) ter zagotoviti standardizirano, časovno žigosano in sledljivo kopijo podatkov za nadaljnje analize. Sistem zmanjšuje ročno delo, ter možnost napak pri ročnem prenosu podatkov.
+
+Sistem bistveno skrajša čas do podatkov, saj avtomatizira prenos in validacijo ter s tem zmanjšuje ročno delo in napake, hkrati pa uvaja verzioniranje za sledljivost. Rezultat so enotni in ažurni nabori, primerni za ključne analize—od scenarijev rasti odjema in ocen "headrooma".
+
+
+Sistem zagotavlja trdno analitično podlago za taktično in strateško odločanje v energetskem sektorju:. Vse od operaterjev in načrtovalcev omrežja do razvijalcev ter investitorjev, javnih ustanov in regulatorjev ter raziskovalcev in svetovalcev. Hkrati je orodje uporabno za vse, ki načrtujejo nove objekte elektroinfrastrukture na primer lokacije električnih polnilnic, ker sistem omogoča hitro preverjanje razpoložljivih kapacitet, omejitev in možnosti priključitve na obstoječe omrežje, ter s tem podpira utemeljeno izbiro lokacije.
+
+\section{Struktura diplomskega dela}
+V \ref{ch:teoreticno}.~poglavju bomo predstavili teoretično ozadje in pregled področja, vključno s pregledom javne električne infrastrukture v UK, tehnik spletnega strganja in podatkovnih cevovodov. \ref{ch:metodologija}.~poglavje bo opisalo metodologijo in zasnovo sistema, medtem ko bo \ref{ch:implementacija}.~poglavje predstavilo podrobnosti implementacije. V \ref{ch:rezultati}.~poglavju bomo analizirali rezultate in evalvacijo sistema, sledil pa bo zaključek z diskusijo o doseženih ciljih in možnostih za nadaljnje delo.
+
+
+
+\chapter{Teoretično ozadje in pregled področja}
+\label{ch:teoreticno}
+
+\section{Javna električna infrastruktura v Združenem kraljestvu}
+
+Združeno kraljestvo ima kompleksen sistem električne infrastrukture, kjer različni akterji upravljajo prenos in distribucijo električne energije. National Grid je glavni operater prenosnega omrežja, ki povezuje elektrarne z distribucijskimi omrežji~\cite{ng_infrastructure}.
+
+National Grid redno objavlja podatke o zmogljivostih omrežja, vključno s podatki o "Demand Headroom" parametru, ki opisuje razpoložljivo kapaciteto omrežja za nove priključitve. Ti podatki so ključni za energetske analize, načrtovanje infrastrukture in sprejemanje poslovnih odločitev.
+
+\section{Spletno strganje podatkov}
+
+Spletno strganje (web scraping) je tehnika avtomatskega pridobivanja podatkov s spletnih strani~\cite{mitchell2018}. V Pythonu obstajajo različne knjižnice sam pa bom uporabil selenium.
+
+Pri spletnem strganju je pomembno upoštevati etične in pravne vidike, vključno s spoštovanjem robots.txt datotek, omejitev hitrosti zahtev in pogojev uporabe spletnih strani~\cite{bravi2023}.
+
+\section{Podatkovni cevovodi}
+
+Podatkovni cevovodi (data pipelines) so avtomatizirani procesi za prenos podatkov od virov do končnih destinacij z možnostjo transformacije med potjo~\cite{wiese2019}. Tradicionalni ETL (Extract, Transform, Load) pristop se v zadnjem času vse bolj nadomešča z ETL (Extract, Transform, Load) pristopom, ki omogoča večjo fleksibilnost pri obdelavi podatkov.
+
+\section{Računalništvo v oblaku}
+
+Google Cloud Platform (GCP) ponuja različne storitve za delo s podatki, vključno z Google Cloud Storage za shranjevanje datotek in Google Cloud Scheduler za avtomatizirano izvajanje opravil~\cite{gcp_docs}. Te storitve omogočajo skalabilno in zanesljivo infrastrukturo za podatkovne cevovode.
+
+\section{Relacijske baze podatkov}
+
+PostgreSQL je zmogljiva odprtokodna relacijska podatkovna baza, ki se pogosto uporablja za shranjevanje strukturiranih podatkov v podatkovnih aplikacijah~\cite{postgresql_docs}. Omogoča kompleksne poizvedbe, transakcije in različne razširitve za specifične potrebe.
+
+
+\chapter{Metodologija in zasnova sistema}
+\label{ch:metodologija}
+
+\section{Identifikacija vira podatkov}
+
+Glavni vir podatkov je spletna stran National Grid, kjer so objavljene Excel datoteke z informacijami o zmogljivostih omrežja. URL za dostop do podatkov je \url{https://www.nationalgrid.co.uk/our-network/network-capacity-map-application}. 
+
+Datoteke vsebujejo različne parametre, posebna pozornost pa bo namenjena polju "Demand Headroom", ki opisuje razpoložljivo kapaciteto za nove priključitve.
+
+\section{Arhitektura sistema}
+
+Sistem bo implementiran po ETL principu z naslednjimi komponentami:
+
+\begin{enumerate}
+\item \textbf{Extract}: Python skripta za prenos Excel datotek s spletne strani National Grid
+\item \textbf{Load}: Shranjevanje surovih datotek v Google Cloud Storage
+\item \textbf{Transform}: Obdelava podatkov z uporabo Pandas knjižnice ter vključitev v bazo.
+\end{enumerate}
+
+Celoten proces bo avtomatiziran z Google Cloud Scheduler in vključeval bo obveščanje preko Slack API.
+
+\section{Izbira orodij}
+
+\subsection{Programski jezik in knjižnice}
+Izbran je Python 3.11 zaradi bogatega ekosistema knjižnic:
+\begin{itemize}
+\item \texttt{selenium} - za upravljanje z brskalnikom
+\item \texttt{pandas} - za branje in obdelavo Excel datotek
+\item \texttt{google-cloud-storage} - za interakcijo z GCS
+\end{itemize}
+
+\subsection{Infrastruktura}
+\begin{itemize}
+\item \textbf{Google Cloud Storage}: Za shranjevanje surovih Excel datotek
+\item \textbf{PostgreSQL}: Za shranjevanje obdelanih podatkov
+\item \textbf{Google Cloud Scheduler}: Za avtomatizirano izvajanje
+\item \textbf{Slack}: Za obveščanje o stanju sistema
+\end{itemize}
+
+
+\section{Kontrola kakovosti podatkov}
+
+Implementirane bodo naslednje kontrole:
+\begin{itemize}
+\item Preverjanje formata in strukture Excel datotek
+\item Detekcija podvojenih vnosov
+\item Validacija podatkovnih tipov
+\item Preverjanje manjkajočih vrednosti
+\end{itemize}
+
+
+\chapter{Implementacija sistema}
+\label{ch:implementacija}
+
+\section{Pridobivanje in shranjevanje podatkov}
+
+Implementirana je bila Python skripta za avtomatsko preverjanje in prenos novih Excel datotek s spletne strani National Grid. Skripta uporablja selenium, kot glavni način upravljanja z brskalnikom.
+
+Prenesene datoteke se avtomatsko naložijo v Google Cloud Storage bucket, kjer se hranijo z unikatnimi imeni, ki vključujejo časovni žig prenosa.
+
+\section{Obdelava podatkov}
+
+Za obdelavo Excel datotek je bila razvita skripta, ki uporablja \texttt{pandas} knjižnico. Skripta:
+\begin{itemize}
+\item Prebere Excel datoteke iz GCS
+\item Izvede čiščenje podatkov (odstranjevanje praznih vrstic, standardizacija formatov)
+\item Pripravi podatke za nalaganje v podatkovno bazo
+\end{itemize}
+
+
+
+
+Shema baze podatkov vključuje primarne in tuje ključe za zagotavljanje referenčne integritete.
+
+\section{Avtomatizacija in nadzor}
+
+Google Cloud Scheduler je konfiguriran za izvajanje celotnega cevovoda na urni osnovi. Konfiguracijska datoteka definira:
+
+\begin{itemize}
+\item Urnik izvajanja (vsako uro med 6:00 in 22:00)
+\item Timeout vrednosti za posamezne korake
+\item Retry logiko za primer napak
+\item Monitoring in alerting nastavitve
+\end{itemize}
+
+Implementiran je bil tudi sistem za obveščanje preko Slack API, ki pošilja:
+--TODO
+
+\section{Kontrola kakovosti podatkov}
+
+Razvit je bil celovit sistem za kontrolo kakovosti, ki vključuje:
+
+--TODO
+
+
+
+\chapter{Rezultati in evalvacija}
+
+
+\chapter{Zaključek}
+
+
+
+
+
+
+%\cleardoublepage
+%\addcontentsline{toc}{chapter}{Literatura}
+
+% če imaš težave poravnati desni rob bibliografije, potem odkomentiraj spodnjo vrstico
+\raggedright
+
+\printbibliography[heading=bibintoc,type=article,title={Članki v revijah}]
+
+\printbibliography[heading=bibintoc,type=inproceedings,title={Članki v zbornikih}]
+
+\printbibliography[heading=bibintoc,type=incollection,title={Poglavja v knjigah}]
+
+% v zadnji verziji diplomskega dela običajno združiš vse tri vrste referenc v en sam seznam in
+% izpustiš delne sezname
+\printbibliography[heading=bibintoc,title={Literatura}]
+
+\end{document}
