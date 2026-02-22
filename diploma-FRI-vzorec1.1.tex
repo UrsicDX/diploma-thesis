@@ -1,0 +1,1435 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% datoteka diploma-FRI-vzorec.tex
+%
+% vzorčna datoteka za pisanje diplomskega dela v formatu LaTeX
+% na UL Fakulteti za računalništvo in informatiko
+%
+% na osnovi starejših verzij vkup spravil Franc Solina, maj 2021
+% prvo verzijo je leta 2010 pripravil Gašper Fijavž
+%
+% za upravljanje z literaturo ta vezija uporablja BibLaTeX
+%
+% svetujemo uporabo Overleaf.com - na tej spletni implementaciji LaTeXa ta vzorec zagotovo pravilno deluje
+%
+
+
+\documentclass[a4paper,12pt,openright]{book}
+%\documentclass[a4paper, 12pt, openright, draft]{book}  Nalogo preverite tudi z opcijo draft, ki pokaže, katere vrstice so predolge! Pozor, v draft opciji, se slike ne pokažejo!
+ 
+\usepackage[utf8]{inputenc}   % omogoča uporabo slovenskih črk kodiranih v formatu UTF-8
+\usepackage[slovene,english]{babel}    % naloži, med drugim, slovenske delilne vzorce
+\usepackage[pdftex]{graphicx}  % omogoča vlaganje slik različnih formatov
+\usepackage{fancyhdr}          % poskrbi, na primer, za glave strani
+\usepackage{amssymb}           % dodatni matematični simboli
+\usepackage{amsmath}           % eqref, npr.
+\usepackage{hyperxmp}
+\usepackage[hyphens]{url}
+\usepackage{csquotes}
+\usepackage[pdftex, colorlinks=true,
+						citecolor=black, filecolor=black, 
+						linkcolor=black, urlcolor=black,
+						pdfproducer={LaTeX}, pdfcreator={LaTeX}]{hyperref}
+
+\usepackage{color}
+\usepackage{soul}
+\usepackage{listings}
+
+% define colors
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codeborder}{RGB}{180,180,180}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{codekeyword}{RGB}{0,0,180}
+
+% listings style
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeborder},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=7pt,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{codekeyword}\bfseries,
+    commentstyle=\color{codecomment},
+    stringstyle=\color{orange},
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4
+}
+
+\lstset{style=mystyle}
+
+\usepackage[
+backend=biber,
+style=numeric,
+sorting=nty,
+]{biblatex}
+
+\usepackage[strings]{underscore}
+\usepackage{minted}
+\usepackage{xcolor}
+
+\addbibresource{literatura.bib} %Imports bibliography file
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	DIPLOMA INFO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\ttitle}{Hibridni pristop k avtomatiziranemu pridobivanju in grafovski analizi podatkov omrežne infrastrukture National Grid}
+\newcommand{\ttitleEn}{A hybrid approach to automated data acquisition and graph-based analysis of National Grid network infrastructure}
+\newcommand{\tsubject}{\ttitle}
+\newcommand{\tsubjectEn}{\ttitleEn}
+\newcommand{\tauthor}{Dominik Uršič}
+\newcommand{\tkeywords}{avtomatizacija pridobivanja podatkov, grafovske baze podatkov, Apache AGE, elektroenergetska infrastruktura, ETL sistem, hibridna analiza}
+\newcommand{\tkeywordsEn}{automated data acquisition, graph databases, Apache AGE, electrical grid infrastructure, ETL system, hybrid analysis}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	HYPERREF SETUP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypersetup{pdftitle={\ttitle}}
+\hypersetup{pdfsubject=\ttitleEn}
+\hypersetup{pdfauthor={\tauthor}}
+\hypersetup{pdfkeywords=\tkeywordsEn}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% postavitev strani
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+\addtolength{\marginparwidth}{-20pt} % robovi za tisk
+\addtolength{\oddsidemargin}{40pt}
+\addtolength{\evensidemargin}{-40pt}
+
+\renewcommand{\baselinestretch}{1.3} % ustrezen razmik med vrsticami
+\setlength{\headheight}{15pt}        % potreben prostor na vrhu
+\renewcommand{\chaptermark}[1]%
+{\markboth{\MakeUppercase{\thechapter.\ #1}}{}} \renewcommand{\sectionmark}[1]%
+{\markright{\MakeUppercase{\thesection.\ #1}}} \renewcommand{\headrulewidth}{0.5pt} \renewcommand{\footrulewidth}{0pt}
+\fancyhf{}
+\fancyhead[LE,RO]{\sl \thepage} 
+%\fancyhead[LO]{\sl \rightmark} \fancyhead[RE]{\sl \leftmark}
+\fancyhead[RE]{\sc \tauthor}              % dodal Solina
+\fancyhead[LO]{\sc Diplomska naloga}     % dodal Solina
+
+
+\newcommand{\BibLaTeX}{{\sc Bib}\LaTeX}
+\newcommand{\BibTeX}{{\sc Bib}\TeX}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% naslovi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+\newcommand{\autfont}{\Large}
+\newcommand{\titfont}{\LARGE\bf}
+\newcommand{\clearemptydoublepage}{\newpage{\pagestyle{empty}\cleardoublepage}}
+\setcounter{tocdepth}{1}	      % globina kazala
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% konstrukti
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+\newtheorem{izrek}{Izrek}[chapter]
+\newtheorem{trditev}{Trditev}[izrek]
+\newenvironment{dokaz}{\emph{Dokaz.}\ }{\hspace{\fill}{$\Box$}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PDF-A
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% define medatata
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\def\Title{\ttitle}
+\def\Author{\tauthor, du3065@student.uni-lj.si}
+\def\Subject{\ttitleEn}
+\def\Keywords{\tkeywordsEn}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \convertDate converts D:20080419103507+02'00' to 2008-04-19T10:35:07+02:00
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\def\convertDate{%
+    \getYear
+}
+
+{\catcode`\D=12
+ \gdef\getYear D:#1#2#3#4{\edef\xYear{#1#2#3#4}\getMonth}
+}
+\def\getMonth#1#2{\edef\xMonth{#1#2}\getDay}
+\def\getDay#1#2{\edef\xDay{#1#2}\getHour}
+\def\getHour#1#2{\edef\xHour{#1#2}\getMin}
+\def\getMin#1#2{\edef\xMin{#1#2}\getSec}
+\def\getSec#1#2{\edef\xSec{#1#2}\getTZh}
+\def\getTZh +#1#2{\edef\xTZh{#1#2}\getTZm}
+\def\getTZm '#1#2'{%
+    \edef\xTZm{#1#2}%
+    \edef\convDate{\xYear-\xMonth-\xDay T\xHour:\xMin:\xSec+\xTZh:\xTZm}%
+}
+
+%\expandafter\convertDate\pdfcreationdate 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% get pdftex version string
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newcount\countA
+\countA=\pdftexversion
+\advance \countA by -100
+\def\pdftexVersionStr{pdfTeX-1.\the\countA.\pdftexrevision}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% XMP data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+\usepackage{xmpincl}
+%\includexmp{pdfa-1b}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% pdfInfo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+\pdfinfo{%
+    /Title    (\ttitle)
+    /Author   (\tauthor, du3065@student.uni-lj.si)
+    /Subject  (\ttitleEn)
+    /Keywords (\tkeywordsEn)
+    /ModDate  (\pdfcreationdate)
+    /Trapped  /False
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% znaki za copyright stran
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+\newcommand{\CcImageCc}[1]{%
+	\includegraphics[scale=#1]{cc_cc_30.pdf}%
+}
+\newcommand{\CcImageBy}[1]{%
+	\includegraphics[scale=#1]{cc_by_30.pdf}%
+}
+\newcommand{\CcImageSa}[1]{%
+	\includegraphics[scale=#1]{cc_sa_30.pdf}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\selectlanguage{slovene}
+\frontmatter
+\setcounter{page}{1} %
+\renewcommand{\thepage}{}       % preprečimo težave s številkami strani v kazalu
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%naslovnica
+ \thispagestyle{empty}%
+   \begin{center}
+    {\large\sc Univerza v Ljubljani\\%
+%      Fakulteta za elektrotehniko\\% za študijski program Multimedija
+%      Fakulteta za upravo\\% za študijski program Upravna informatika
+      Fakulteta za računalništvo in informatiko\\%
+%      Fakulteta za matematiko in fiziko\\% za študijski program Računalništvo in matematika
+     }
+    \vskip 10em%
+    {\autfont \tauthor\par}%
+    {\titfont \ttitle \par}%
+    {\vskip 3em \textsc{DIPLOMSKO DELO\\[5mm]         % dodal Solina za ostale študijske programe
+%    VISOKOŠOLSKI STROKOVNI ŠTUDIJSKI PROGRAM\\ PRVE STOPNJE\\ RAČUNALNIŠTVO IN INFORMATIKA}\par}%
+     UNIVERZITETNI  ŠTUDIJSKI PROGRAM\\ PRVE STOPNJE\\ RAČUNALNIŠTVO IN INFORMATIKA}\par}%
+%    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ MULTIMEDIJA}\par}%
+%    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ UPRAVNA INFORMATIKA}\par}%
+%    INTERDISCIPLINARNI UNIVERZITETNI\\ ŠTUDIJSKI PROGRAM PRVE STOPNJE\\ RAČUNALNIŠTVO IN MATEMATIKA}\par}%
+    \vfill\null%
+% izberite pravi habilitacijski naziv mentorja!
+    {\large \textsc{Mentor}: izr. prof. dr. Matjaž Kukar\par}%
+%   {\large \textsc{Somentor}:  viš. pred./doc./izr. prof./prof. dr.  Martin Krpan \par}%
+    {\vskip 2em \large Ljubljana, \the\year \par}%
+\end{center}
+% prazna stran
+%\clearemptydoublepage      
+% izjava o licencah itd. se izpiše na hrbtni strani naslovnice
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%copyright stran
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\thispagestyle{empty}
+
+\vspace*{5cm}
+{\small \noindent
+To delo je ponujeno pod licenco \textit{Creative Commons Priznanje avtorstva-Deljenje pod enakimi pogoji 2.5 Slovenija} (ali novej\v so razli\v cico).
+To pomeni, da se tako besedilo, slike, grafi in druge sestavine dela kot tudi rezultati diplomskega dela lahko prosto distribuirajo,
+reproducirajo, uporabljajo, priobčujejo javnosti in predelujejo, pod pogojem, da se jasno in vidno navede avtorja in naslov tega
+dela in da se v primeru spremembe, preoblikovanja ali uporabe tega dela v svojem delu, lahko distribuira predelava le pod
+licenco, ki je enaka tej.
+Podrobnosti licence so dostopne na spletni strani \href{http://creativecommons.si}{creativecommons.si} ali na Inštitutu za
+intelektualno lastnino, Streliška 1, 1000 Ljubljana.
+
+\vspace*{1cm}
+\begin{center}% 0.66 / 0.89 = 0.741573033707865
+\CcImageCc{0.741573033707865}\hspace*{1ex}\CcImageBy{1}\hspace*{1ex}\CcImageSa{1}%
+\end{center}
+}
+
+\vspace*{1cm}
+{\small \noindent
+Izvorna koda diplomskega dela, njeni rezultati in v ta namen razvita programska oprema je ponujena pod licenco GNU General Public License,
+različica 3 (ali novejša). To pomeni, da se lahko prosto distribuira in/ali predeluje pod njenimi pogoji.
+Podrobnosti licence so dostopne na spletni strani \url{http://www.gnu.org/licenses/}.
+}
+
+\vfill
+\begin{center} 
+\ \\ \vfill
+{\em
+Besedilo je oblikovano z urejevalnikom besedil \LaTeX.}
+\end{center}
+
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% stran 3 med uvodnimi listi
+\thispagestyle{empty}
+\
+\vfill
+
+\bigskip
+\noindent\textbf{Kandidat:} Dominik Uršič\\
+\noindent\textbf{Naslov:} Hibridni pristop k avtomatiziranemu pridobivanju in grafovski analizi podatkov omrežne infrastrukture National Grid\\
+% vstavite ustrezen naziv študijskega programa!
+\noindent\textbf{Vrsta naloge:} Diplomska naloga na univerzitetnem programu prve stopnje Računalništvo in informatika \\
+% izberite pravi habilitacijski naziv mentorja!
+\noindent\textbf{Mentor:} izr. prof. dr. Matjaž Kukar\\
+%\noindent\textbf{Somentor:} isto kot za mentorja
+
+\bigskip
+\noindent\textbf{Opis:}\\
+Diplomska naloga predstavlja razvoj avtomatiziranega ETL sistema za pridobivanje in obdelavo podatkov o električni infrastrukturi operaterja National Grid v Združenem kraljestvu. Sistem avtomatizirano prenaša javno dostopne Excel datoteke, jih arhivira v Google Cloud Storage ter procesira s Python skriptami. Obdelani podatki se naložijo v PostgreSQL bazo z Apache AGE grafovsko razširitvijo, kar omogoča hibridne relacijske in grafovske analize omrežne strukture. Celoten proces je avtomatiziran z Google Cloud Scheduler ter vključuje mehanizme validacije, nadzora kakovosti podatkov in sledljivosti. Naloga demonstrira praktično uporabnost sistema z analitičnimi poizvedbami za optimizacijo omrežnih povezav in izračun prenosnih izgub, izvedenimi v SQL in Cypher jezikih.
+\pagebreak
+\bigskip
+\noindent\textbf{Title:} A hybrid approach to automated data acquisition and graph-based analysis of National Grid network infrastructure
+
+\bigskip
+\noindent\textbf{Description:}\\
+The thesis presents the development of an automated ETL system for acquiring and processing electrical infrastructure data from the National Grid operator in the United Kingdom. The system automatically downloads publicly available Excel files, archives them in Google Cloud Storage, and processes them using Python scripts. The processed data is loaded into a PostgreSQL database with Apache AGE graph extension, enabling hybrid relational and graph-based analyses of network structure. The entire process is automated using Google Cloud Scheduler and includes mechanisms for validation, data quality control, and traceability. The thesis demonstrates the practical applicability of the system through analytical queries for network connection optimization and transmission loss calculations, implemented in both SQL and Cypher languages.
+
+\vfill
+
+\vspace{2cm}
+
+% prazna stran
+\clearemptydoublepage
+
+% zahvala
+\thispagestyle{empty}\mbox{}\vfill\null\it%
+\noindent
+Zahvaljujem se mentorju izr. prof. dr. Matjažu Kukarju za strokovno vodenje in podporo pri izdelavi diplomske naloge. Posebna zahvala gre tudi družini in prijateljem za razumevanje in spodbudo v času študija.
+\rm\normalfont
+
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% posvetilo, če sama zahvala ne zadošča :-)
+
+
+% prazna stran
+\clearemptydoublepage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% kazalo
+\pagestyle{empty}
+\def\thepage{}% preprečimo težave s številkami strani v kazalu
+\tableofcontents{}
+
+
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% seznam kratic
+
+
+\chapter*{Seznam uporabljenih kratic}
+
+\noindent\begin{tabular}{p{0.15\textwidth}|p{.39\textwidth}|p{.39\textwidth}}    % po potrebi razširi prvo kolono tabele na račun drugih dveh!
+  {\bf kratica} & {\bf angleško}                              & {\bf slovensko} \\ \hline
+  {\bf ETL}   & Extract, Transform, Load              & izlušči, preoblikuj, naloži \\
+  {\bf GCP}   & Google Cloud Platform              & platforma Google Cloud \\
+  {\bf GCS}   & Google Cloud Storage              & shramba Google Cloud \\
+  {\bf NG}   & National Grid              & državno omrežje \\
+  {\bf DNO}   & Distribution Network Operator              & operater distribucijskega omrežja \\
+  {\bf GSP}   & Grid Supply Point              & napajalna točka omrežja \\
+  {\bf BSP}   & Bulk Supply Point              & glavna napajalna točka \\
+  {\bf PRIM}   & Primary Substation              & primarna transformatorska postaja \\
+  {\bf AGE}   & Apache Graph Extension              & razširitev Apache Graph \\
+  {\bf Scheduler}    & Scheduler & razporejevalnik opravil \\
+\end{tabular}
+
+
+
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% povzetek
+\phantomsection
+\addcontentsline{toc}{chapter}{Povzetek}
+\chapter*{Povzetek}
+
+\noindent\textbf{Naslov:} \ttitle
+\bigskip
+
+\noindent\textbf{Avtor:} \tauthor
+\bigskip
+
+%\noindent\textbf{Povzetek:} 
+\noindent Cilj diplomske naloge je razvoj in implementacija avtomatiziranega ETL sistema za pridobivanje, obdelavo in shranjevanje podatkov o javni električni infrastrukturi operaterja National Grid v Združenem kraljestvu, z implementacijo hibridnega relacijsko-grafovskega pristopa k analizi omrežne strukture. Sistem bo redno prenašal javno dostopne Excel datoteke s spletne platforme National Grid, jih arhiviral v Google Cloud Storage za zagotavljanje zgodovinske sledljivosti, ter jih procesiral s Python skriptami za čiščenje, validacijo in transformacijo podatkov. Posebna pozornost bo namenjena kazalniku razpoložljive kapacitete (Demand Headroom), ki predstavlja razliko med zanesljivo nosilnostjo omrežnega elementa in njegovo pričakovano najvišjo obremenitvijo ter tako določa preostalo zmogljivost pred potrebnimi infrastrukturnimi nadgradnjami. Obdelani podatki bodo naloženi v PostgreSQL podatkovno bazo, razširjeno z Apache AGE grafovsko nadgradnjo, kar bo omogočalo izvajanje tako tradicionalnih SQL kot tudi grafovskih Cypher poizvedb nad isto podatkovno strukturo. Ta hibridni pristop bo demonstriran z implementacijo analitičnih poizvedb za optimizacijo omrežnih povezav in izračun prenosnih izgub električne energije, izvedenih v obeh pristopih za neposredno primerjavo njihovih prednosti in omejitev.
+Celoten proces bo v celoti avtomatiziran z uporabo Google Cloud Scheduler, ki bo zagotavljal redno izvajanje, mehanizme nadzora kakovosti podatkov ter popolno sledljivost vseh operacij. Sistem je zasnovan skalabilno, kar omogoča enostavno razširitev na dodatne operaterje distribucijskih omrežij ter predstavlja osnovo za potencialni razvoj celovite nacionalne platforme spremljanja električne infrastrukture v podporo energetski tranziciji.
+
+\bigskip
+
+\noindent\textbf{Ključne besede:} \tkeywords.
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% abstract
+\phantomsection
+\selectlanguage{english}
+\addcontentsline{toc}{chapter}{Abstract}
+\chapter*{Abstract}
+
+\noindent\textbf{Title:} \ttitleEn
+\bigskip
+
+\noindent\textbf{Author:} \tauthor
+\bigskip
+
+%\noindent\textbf{Abstract:} 
+\noindent The objective of this thesis is the development and implementation of an automated ETL system for acquiring, processing, and storing data on public electrical infrastructure of the National Grid operator in the United Kingdom, with implementation of a hybrid relational-graph approach to network structure analysis. The system will regularly download publicly available Excel files from the National Grid platform, archive them in Google Cloud Storage to ensure historical traceability, and process them using Python scripts for data cleaning, validation, and transformation. Special attention will be given to the Demand Headroom indicator, which represents the difference between the reliable capacity of a network element and its expected peak load, thus determining the remaining capacity before infrastructural upgrades are required. The processed data will be loaded into a PostgreSQL database extended with the Apache AGE graph extension, enabling the execution of both traditional SQL and graph-based Cypher queries on the same data structure. This hybrid approach will be demonstrated through the implementation of analytical queries for network connection optimization and electrical transmission loss calculations, executed in both approaches for direct comparison of their advantages and limitations.
+
+The entire process will be fully automated using Google Cloud Scheduler, which will ensure regular execution, data quality control mechanisms, and complete traceability of all operations. The system is designed to be scalable, enabling easy extension to additional distribution network operators and providing a foundation for potential development of a comprehensive national platform for monitoring electrical infrastructure in support of energy transition.
+\bigskip
+
+\noindent\textbf{Keywords:} \tkeywordsEn.
+\selectlanguage{slovene}
+% prazna stran
+\clearemptydoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
+\setcounter{page}{1}
+\pagestyle{fancy}
+
+\chapter{Uvod}
+
+\section{Motivacija}
+
+V sodobnem svetu električno omrežje predstavlja kritično infrastrukturo, ki omogoča delovanje industrije, gospodinjstev, transporta in digitalnih storitev. Z naraščajočo integracijo obnovljivih virov energije, elektrifikacijo transporta ter razvojem pametnih omrežij postaja zanesljiv dostop do ažurnih podatkov o stanju električne infrastrukture vse bolj ključen za učinkovito načrtovanje, analizo in sprejemanje strateških odločitev na energetskem področju. V Združenem kraljestvu je National Grid \cite{nationalgrid2026} eden vodilnih operaterjev distribucijskega elektroenergetskega omrežja, ki pokriva obsežna geografska območja, vključno z regijami East Midlands, West Midlands, South Wales ter South West England. Kot ključni distribucijski operater (DNO) je National Grid odgovoren za vzdrževanje in upravljanje srednjenapetostnega omrežja na svojem območju ter zagotavlja stabilno in zanesljivo oskrbo z električno energijo za več milijonov gospodinjstev in podjetij.
+
+National Grid redno objavlja podatke o stanju svoje infrastrukture v obliki javno dostopnih Excel datotek na svoji spletni platformi. Ti podatki vključujejo obsežne informacije o transformatorskih postajah, napetostnih nivojih, geografskih lokacijah ter ključnem kazalniku razpoložljive kapacitete (Demand Headroom), ki določa preostalo zmogljivost posameznih omrežnih elementov. Kljub javni dostopnosti pa je njihovo ročno pridobivanje, organizacija in posodabljanje časovno zamudno, podvrženo človeški napaki ter ne omogoča zgodovinske sledljivosti sprememb v infrastrukturi. Pomanjkanje avtomatiziranih sistemov za redno zajemanje in procesiranje teh podatkov predstavlja oviro za različne deležnike v energetskem sektorju. Razvijalci projektov obnovljivih virov energije potrebujejo ažurne informacije o razpoložljivih kapacitetah za optimalno lociranje sončnih elektrarn in vetrnih parkov. Načrtovalci polnilne infrastrukture za električna vozila morajo identificirati lokacije z zadostno omrežno kapaciteto za priključitev hitrih polnilnic. Energetska podjetja in svetovalne agencije pa potrebujejo celovit pregled nad stanjem omrežja za strateško načrtovanje investicij in storitev.
+
+\section{Opredelitev problema}
+
+Trenutno pridobivanje podatkov o električni infrastrukturi National Grid poteka pretežno ročno, kar vključuje mesečno ali kvartalno odpiranje spletnih strani, iskanje ustreznih datotek, njihov prenos ter ročno vnašanje v lokalne evidence ali analitična orodja. Ta proces običajno zahteva 2-4 ure kvalificiranega dela na mesec in je podvržen več ključnim težavam.
+
+Prvič, odsotnost zgodovinske sledljivosti predstavlja pomembno omejitev. Spletna platforma National Grid prikazuje zgolj najnovejše verzije datotek brez arhiviranja predhodnih stanj, kar onemogoča analizo časovnih sprememb v razpoložljivih kapacitetah, prepoznavanje trendov obremenitev ali longitudinalne študije razvoja omrežja. To otežuje dolgoročno načrtovanje infrastrukturnih investicij ter identifikacijo sistematičnih vzorcev v rasti elektroenergetskih potreb.
+
+Drugič, pomanjkanje centralizirane in strukturirane podatkovne baze onemogoča integracijo informacij iz različnih virov ter izvajanje kompleksnih analiz, ki bi zahtevale kombiniranje podatkov o omrežni infrastrukturi z drugimi relevantnimi viri, kot so demografski trendi, prostorski načrti, vremenske napovedi ali projekcije rasti obnovljivih virov energije.
+
+Tretjič, ročno procesiranje podatkov ne zagotavlja konsistentne kakovosti, saj lahko različni uporabniki uporabljajo različne metodologije čiščenja in transformacije podatkov, kar otežuje primerjavo rezultatov ter sodelovanje med organizacijami.
+
+Četrtič, električna infrastruktura je inherentno omrežne narave z hierarhičnimi povezavami med različnimi napetostnimi nivoji (GSP → BSP → PRIM), vendar tradicionalne relacijske baze niso optimizirane za predstavitev in analizo takšnih grafovskih struktur. To otežuje izvajanje omrežnih analiz, kot so iskanje optimalnih poti, identifikacija kritičnih vozlišč ali simulacije kaskadnih izpadov.
+
+\section{Namen in cilji naloge}
+
+Primarni namen sistema je avtomatizirati zajem javno dostopnih podatkov National Grid Electricity Distribution ter zagotoviti standardizirano, časovno označeno in sledljivo kopijo podatkov za nadaljnje analize. Sistem zmanjšuje ročno delo ter možnost napak pri ročnem prenosu podatkov, hkrati pa uvaja verzioniranje za popolno sledljivost sprememb v infrastrukturi skozi čas. Glavni cilj naloge je implementacija robustnega ETL (Extract, Transform, Load) sistema, ki bo avtomatizirano prenašal javno dostopne Excel datoteke s spletne platforme National Grid, jih arhiviral v Google Cloud Storage staging okolju za zagotavljanje zgodovinske sledljivosti, ter jih procesiral s Python skriptami za čiščenje, validacijo in transformacijo v standardizirane formate.
+
+Obdelani podatki bodo naloženi v PostgreSQL podatkovno bazo, razširjeno z Apache AGE grafovsko nadgradnjo, kar bo omogočalo hibridni pristop k analizi podatkov. Ta pristop kombinira prednosti relacijskih baz (učinkovitost, zrelost, SQL ekosistem) s prednostmi grafovskih baz (intuitivno modeliranje omrežnih struktur, podporo za Cypher poizvedbe, omrežne algoritme). Posebna pozornost bo namenjena kazalniku razpoložljive kapacitete (Demand Headroom), ki predstavlja ključno informacijo za načrtovanje novih priključitev in infrastrukturnih nadgradenj. Sistem bo omogočal spremljanje časovnih sprememb tega kazalnika ter identifikacijo območij z nizko razpoložljivo kapaciteto, kar je kritičnega pomena za načrtovalce novih objektov elektroinfrastrukture, kot so lokacije električnih polnilnic.
+
+Celoten proces bo v celoti avtomatiziran z uporabo Google Cloud Scheduler, ki bo zagotavljal redno urno izvajanje v poslovnem času, mehanizme za validacijo kakovosti podatkov, obveščanje o napakah ter popolno sledljivost vseh operacij preko strukturiranega beleženja dogodkov. Dodatni cilj naloge je demonstracija praktične uporabnosti hibridnega relacijsko-grafovskega pristopa z implementacijo dveh kompleksnih analiz: optimizacija dodelitev primarnih transformatorskih postaj za minimizacijo prenosnih razdalj ter izračun prenosnih izgub električne energije na različnih segmentih omrežja. Vsaka analiza bo izvedena z uporabo tako SQL kot Cypher pristopa, kar bo omogočilo neposredno primerjavo obeh metodologij z vidika berljivosti, zmogljivosti in praktične uporabnosti.
+
+\section{Pričakovane koristi in deležniki}
+
+Implementacija avtomatiziranega sistema za pridobivanje podatkov o električni infrastrukturi bo prinesla oprijemljive koristi različnim deležnikom v energetskem sektorju. Sistem bo zmanjšal časovne zahteve za pridobivanje podatkov s trenutnih 2-4 ur mesečnega ročnega dela na nekaj minut avtomatiziranega procesa, kar predstavlja neposreden prihranek delovnega časa kvalificiranih kadrov ter zmanjšanje možnosti človeških napak pri prenosu in obdelavi podatkov.
+
+Sistem zagotavlja trdno analitično podlago za taktično in strateško odločanje v energetskem sektorju. Ključni deležniki sistema so energetska podjetja in razvijalci projektov, ki bodo pridobili takojšen dostop do ažurnih podatkov o razpoložljivih kapacitetah (Demand Headroom), kar bo omogočilo hitrejše in bolj informirane odločitve o lokacijah novih projektov. Svetovalna podjetja v energetskem sektorju bodo lahko svojim strankam ponudila natančnejše analize in hitreje pripravila študije izvedljivosti, medtem ko bodo investitorji v obnovljive vire energije pridobili kritične informacije za oceno primernosti lokacij za solarne elektrarne, vetrne parke ali baterijske sisteme.
+
+Operaterji omrežja in načrtovalci infrastrukture bodo lahko uporabljali sistem za prepoznavanje ozkih grl v omrežju, načrtovanje nadgradenj ter optimizacijo razporeditve novih transformatorskih postaj. Javne ustanove in regulatorji bodo imeli na voljo konsistenten vir podatkov za spremljanje razvoja elektroenergetskega sistema ter pripravo strateških smernic za energetsko tranzicijo. Raziskovalci in svetovalni strokovnjaki pa bodo lahko izvajali napredne analize trendov porabe, napovedovanje prihodnjih kapacitet ter simulacije različnih scenarijev razvoja omrežja.
+
+Strukturirana zgodovinska baza podatkov bo omogočila napredno analitiko za prepoznavanje trendov porabe, napovedovanje prihodnjih kapacitet in identifikacijo kritičnih točk v omrežju, kar bo podprlo strateško načrtovanje investicij v energetsko infrastrukturo in pospešilo prehod na trajnostne vire energije. Dolgoročno bo sistem omogočil enostavno razširitev na dodatne distributerje električne energije po celotni Veliki Britaniji, saj bo vzpostavljena arhitektura zlahka prilagodljiva za integracijo podatkov iz UK Power Networks, Scottish Power Energy Networks in drugih operaterjev.
+
+
+
+
+\section{Struktura dokumenta}
+
+V drugem poglavju predstavimo teoretično ozadje s pregledom ETL procesov, pristopov k avtomatizaciji pridobivanja podatkov ter grafovskih podatkovnih baz. Posebej obravnavamo Apache AGE razširitev za PostgreSQL in jezik Cypher ter utemeljimo izbiro PostgreSQL kot primerne platforme za našo aplikacijo kljub temu, da gre za OLTP (sprotno obdelovanje transakcij) bazo in ne specializiran OLAP (spletno razčlenitveno obdelovanje) sistem. Čeprav je PostgreSQL prvotno zasnovan za transakcijsko procesiranje, njegove napredne zmogljivosti (kompleksne poizvedbe, CTE strukture, okenska funkcija, JSON podpora) ter predvsem Apache AGE grafovska razširitev omogočajo učinkovito analitično delo na srednje velikih podatkovnih množicah, kakršne predstavljajo podatki o električni infrastrukturi. Odločitev za PostgreSQL namesto specializiranih OLAP rešitev (kot so ClickHouse ali Druid) temelji na več dejavnikih: relativno majhen obseg podatkov (nekaj tisoč transformatorskih postaj), potreba po hibridnem relacijsko-grafovskem pristopu, ki ga specialized OLAP sistemi ne podpirajo, ter prednost enotne platforme za transakcijsko in analitično obdelavo brez potrebe po dodatni ETL cevi med sistemoma. V tretjem poglavju opisujemo metodologijo in arhitekturo sistema, vključno s celotno strukturo ETL cevovoda, odločitvami pri izbiri tehnologij ter zasnovo podatkovnega modela z grafovsko shemo. Predstavimo, kako smo kombinirali relacijski in grafovski pristop za optimalno modeliranje hierarhične strukture elektroenergetskega omrežja.
+
+V četrtem poglavju podrobno predstavimo implementacijo posameznih komponent, od Python skript za obdelavo podatkov, konfiguracije Google Cloud Storage in Cloud Scheduler, do strukture relacijskih tabel in grafovskega modela. Prikažemo, kako PostgreSQL z Apache AGE razširitvijo omogoča izvajanje kompleksnih analitičnih poizvedb, ki sicer spadajo v domeno OLAP sistemov, vendar jih lahko učinkovito izvajamo tudi na OLTP platformi pri obsegu podatkov, s katerim operiramo. V petem poglavju predstavimo rezultate avtomatizacije, implementacije analitičnih poizvedb v SQL in Cypher pristopih, kvantitativno primerjavo obeh pristopov ter vizualizacije ugotovitev o optimizaciji omrežnih povezav in prenosnih izgubah. Demonstriramo, kako hibridni pristop omogoča tako transakcijsko vnašanje novih podatkov kot tudi analitične poizvedbe nad omrežno strukturo brez potrebe po ločenih sistemih.
+
+V šestem poglavju povzamemo ključne ugotovitve, evalviramo doseganje zastavljenih ciljev ter opredelimo možnosti nadaljnjega razvoja sistema, vključno s potencialnimi migracijami na specialized OLAP platforme v primeru bistveno večjih podatkovnih množic ali potrebe po real-time analitiki.
+
+\chapter{Teoretično ozadje in pregled področja}
+\label{ch:teoreticno}
+
+\section{Zgodovina spletnega strganja podatkov in izbira orodja}
+Avtomatizirano zajemanje podatkov s spletnih strani se je v zadnjih dvajsetih letih precej spremenilo, ker so se spremenile tudi same spletne strani. V začetkih interneta so bile strani večinoma statične v obliki HTML dokumenta, zato je za pridobivanje podatkov zadostovala preprosta analiza izvorne kode. Takrat so bile v uporabi predvsem rešitve, ki so temeljile na regularnih izrazih in osnovnem razčlenjevanju HTML strukture.
+Pomemben mejnik je predstavljal razvoj specializiranih knjižnic za delo z HTML dokumenti. Leta 2004 je prišel Beautiful Soup \cite{beautifulsoup4}, ki je spletno strganje naredil veliko bolj dostopno. Ta Python knjižnica je z intuitivno sintakso omogočila enostavno ekstrakcijo podatkov iz kompleksnih HTML struktur, vendar je bila še vedno omejena na statično vsebino. V tem času so se podobne knjižnice razvijale tudi za druge programske jezike (jsoup\cite{jsoup} za Javo).
+
+Leta 2008 je Scrapy \cite{scrapy} prinesel nov pristop s svojo asinhrono arhitekturo, ki je omogočila učinkovito obdelavo velikega števila strani hkrati. To Python ogrodje je postalo nekakšen standard za večje projekte spletnega strganja, saj je omogočalo distribuirano delo, avtomatsko upravljanje s piškotki in sejami ter robustno obravnavo napak.
+Takrat pa se je začel tudi velik premik v spletnem razvoju. Z uvedbo AJAX tehnologij in enostranskih aplikacij so spletne strani postale veliko bolj dinamične. Vsebina se je začela nalagati asinhrono, elementi so se generirali z JavaScript kodo, podatki pa so se pridobivali preko API klicev šele po začetnem nalaganju strani. Tradicionalne metode strganja naenkrat niso več zadostovale.
+
+Rešitev je prišla z orodji za avtomatizacijo brskalnikov. Selenium WebDriver \cite{selenium_webdriver}, ki je bil sicer prvotno razvit za testiranje spletnih aplikacij, se je izkazal za odlično orodje tudi za strganje kompleksnih strani. Za razliko od prejšnjih pristopov Selenium upravlja pravi brskalnik – lahko izvaja JavaScript, čaka na dinamično naložene elemente, simulira klike in druge uporabniške interakcije ter se spopada s kompleksnimi navigacijskimi tokovi.
+Selenium deluje preko WebDriver protokola, ki ga je leta 2018 standardiziral W3C konzorcij. Ta protokol omogoča komunikacijo med programsko kodo in brskalnikom na način, ki deluje prek različnih brskalnikov (Chrome, Firefox, Safari, Edge) in operacijskih sistemov. Osnova je odjemalec-strežnik model, kjer aplikacija pošilja ukaze gonilniku brskalnika, ta pa jih izvaja in vrača rezultate.
+
+Za projekt avtomatizacije National Grid platforme je bil Selenium najboljša izbira iz več razlogov. Platforma zahteva avtentikacijo preko prijavnega obrazca, uporablja dinamično nalaganje vsebine, vključuje interaktivne zemljevide in vizualizacije ter ima tudi določene zaščitne mehanizme proti avtomatizaciji. Zato smo uporabili še undetected-chromedriver, ki z različnimi tehnikami (modifikacija navigator objekta, odstranjevanje WebDriver zastavic, simulacija realističnih vzorcev gibanja miške) poskrbi, da sistem ne zazna avtomatizacije.
+Prehod od Beautiful Soup preko Scrapy do Selenium tako zrcali razvoj spletnih tehnologij. Medtem ko enostavnejša orodja še vedno dobro služijo za statične strani, kompleksne moderne aplikacije zahtevajo polno simulacijo brskalnika. Selenium z zmožnostjo izvajanja JavaScript kode, čakanja na asinhrono naložene elemente in simulacije uporabniških interakcij trenutno predstavlja najzmogljivejšo rešitev za avtomatizirano pridobivanje podatkov iz sodobnih spletnih platform.
+
+\section{Javna električna infrastruktura v Združenem kraljestvu}
+
+Združeno kraljestvo ima kompleksen sistem električne infrastrukture, kjer različni akterji upravljajo prenos in distribucijo električne energije. Država je razdeljena na 14 geografskih območij, za katera je odgovornih šest podjetij. National Grid je eden glavnih operaterjev prenosnega omrežja, ki povezuje elektrarne z distribucijskimi omrežji ~\cite{ng_infrastructure}.
+
+National Grid redno objavlja podatke o zmogljivostih omrežja, vključno s podatki o "Demand Headroom" parametru, ki opisuje razpoložljivo kapaciteto omrežja za nove priključitve. Ti podatki so ključni za energetske analize, načrtovanje infrastrukture in sprejemanje poslovnih odločitev. ~\cite{KUFEOGLU2019412}
+
+\section{National Grid API}
+API Connected Data Portal podjetja National Grid predstavlja standardiziran vmesnik za programski dostop do javno objavljenih energetskih in omrežnih podatkov. Kljub temu, da pokriva podatkovno domeno, ki se vsebinsko delno prekriva z obravnavanim področjem naloge, sistem izkazuje ključne strukturne omejitve, ki onemogočajo njegovo učinkovito implementacijo v kontekstu obravnavanih podatkov.
+Fundamentalna omejitev izhaja iz vnaprej definirane arhitekture podatkovnih nizov, pri čemer ponudnik določa tako obseg kot strukturo razpoložljivih podatkov. API v svoji trenutni konfiguraciji ne omogoča fleksibilnega prilagajanja podatkovnih zahtevkov specifičnim potrebam posameznega primera uporabe, temveč zgolj izpostavlja že obstoječe podatkovne nize v fiksni obliki, kot so bili izvirno objavljeni.
+
+\section{Spletno strganje podatkov}
+
+Spletno strganje (web scraping) je tehnika avtomatskega pridobivanja podatkov s spletnih strani~\cite{mitchell2018}. V Pythonu obstajajo različne knjižnice, sam pa bom uporabil Selenium, ki omogoča programsko upravljanje spletnega brskalnika in interakcijo z dinamičnimi spletnimi stranmi.
+Selenium deluje tako, da simulira dejanja pravega uporabnika v brskalniku, lahko klikne gumbe, izpolni obrazce, počaka na nalaganje elementov in izvozi podatke. Proces se tipično začne z inicializacijo brskalnika (v našem primeru Chromium z undetected-chromedriver za izogibanje detekciji avtomatizacije), nato pa skript sistematično navigira po spletni strani. Najprej se izvede prijava z vnosom uporabniškega imena in gesla, sledi navigacija do želenega dela aplikacije, kjer se sproži izvoz podatkov. Posebni funkciji (WebDriverWait in expected-conditions)  zagotavljata, da skript počaka na popolno nalaganje elementov, preden z njimi upravlja, kar preprečuje napake zaradi asinhronega nalaganja vsebine. Ko je datoteka prenesena, se avtomatsko preimenuje s časovnim žigom in shrani v določeno mapo za nadaljnjo obdelavo.
+Pri spletnem strganju je pomembno upoštevati etične in pravne vidike, vključno s spoštovanjem robots.txt datotek, omejitev frekvence zahtev in pogojev uporabe spletnih strani~\cite{bravi2023}. V našem primeru gre za pridobivanje javno dostopnih podatkov z uporabo legitimnih prijavnih podatkov, kar zagotavlja skladnost s pogoji uporabe National Grid platforme.
+
+\section{Selenium WebDriver}
+Selenium WebDriver je odprtokodno orodje za avtomatizacijo spletnih brskalnikov, ki omogoča programsko interakcijo s spletnimi stranmi. Temelji na arhitekturi tipa odjemalec–strežnik: aplikacija pošilja ukaze brskalniku prek protokola WebDriver, brskalnikov gonilnik pa ta navodila izvede in vrne rezultat. Ko Python skripta pokliče Seleniumovo metodo, se ta pretvori v HTTP zahtevo, ki jo gonilnik brskalnika (na primer ChromeDriver za Google Chrome) izvede neposredno v uporabniškem vmesniku. Selenium omogoča različne načine za iskanje elementov na spletni strani, kot so uporaba identifikatorjev, CSS selektorjev, izrazov XPath ali imen razredov. Z uporabo mehanizmov WebDriverWait in expected conditions lahko skripta eksplicitno počaka, da se določen pogoj izpolni (na primer, da element postane klikljiv), preden nadaljuje z izvajanjem. Tak pristop je ključen pri dinamičnih spletnih straneh, kjer se vsebina nalaga asinhrono prek JavaScripta.
+
+\section{Podatkovni cevovodi}
+
+Podatkovni cevovodi (data pipelines) so avtomatizirani procesi za prenos podatkov od virov do končnih destinacij z možnostjo transformacije med potjo~\cite{wiese2019}. Tradicionalni ETL (Extract, Transform, Load) pristop se v zadnjem času vse bolj nadomešča z ELT (Extract, Load, Transform) pristopom, ki omogoča večjo fleksibilnost pri obdelavi podatkov.
+Ključna razlika med pristopoma je v zaporedju operacij. Pri ETL pristopu se podatki najprej ekstraktirajo iz vira, nato transformirajo v vmesnem okolju in šele nato naložijo v ciljno podatkovno bazo. Nasprotno pa ELT pristop najprej naloži surove podatke neposredno v podatkovno bazo, kjer se transformacije izvajajo z uporabo SQL poizvedb in drugih orodij znotraj samega RDBMS sistema. 
+V našem sistemu implementiramo klasični ETL pristop, ki se je izkazal za najbolj primernega glede na naravo podatkov in zahteve sistema. 
+Uporaba ETL pristopa pozitivno vpliva na zmogljivost RDBMS sistema, saj PostgreSQL prejme le čiste, validirane podatke, kar zmanjšuje potrebo po kompleksnih SQL transformacijah in s tem obremenitev podatkovne baze. To omogoča, da se PostgreSQL osredotoči na svoje primarne naloge, učinkovito shranjevanje, indeksiranje in serviranje podatkov končnim uporabnikom. Manjša obremenitev baze pomeni hitrejše odzivne čase pri poizvedbah, nižjo porabo sistemskih virov in večjo skalabilnost sistema. Dodatno ETL pristop omogoča lažje odkrivanje in reševanje napak v podatkih, saj se te obravnavajo še pred vnosom v produkcijsko bazo, kar zagotavlja večjo integriteto podatkov in zanesljivost celotnega sistema.
+
+\section{Računalništvo v oblaku}
+
+Google Cloud Platform (GCP) ponuja različne storitve za delo s podatki, vključno z Google Cloud Storage za shranjevanje datotek in Google Cloud Scheduler za avtomatizirano izvajanje opravil~\cite{gcp_docs}. Te storitve omogočajo skalabilno in zanesljivo infrastrukturo za podatkovne cevovode.
+
+\section{Relacijske baze podatkov}
+
+PostgreSQL je zmogljiva odprtokodna objektno-relacijska podatkovna baza, ki se pogosto uporablja za shranjevanje strukturiranih podatkov v podatkovnih aplikacijah~\cite{postgresql_docs}. Omogoča kompleksne poizvedbe, ACID transakcije, različne razširitve za specifične potrebe ter napredno indeksiranje.
+Za naš sistem avtomatiziranega pridobivanja podatkov o električni infrastrukturi so ključne funkcionalne zahteve PostgreSQL sistema naslednje: podpora za velike količine časovnih serij podatkov (preko 1300 zapisov, seveda lahko postgreSQL obdela še veliko več zapisov), zmožnost hitrega vstavljanja novih podatkov preko bulk \textbf{INSERT} operacij, učinkovito indeksiranje na polju Demand Headroom za hitre poizvedbe, podpora za JSON podatkovne tipe za shranjevanje semi-strukturiranih metapodatkov, ter zmožnost izvajanja kompleksnih analitičnih poizvedb z window funkcijami. Sistem mora zagotavljati tudi verzioniranje podatkov, kjer se ohranjajo vse zgodovinske verzije za revizijske sledi in analizo trendov.
+Pomembna je tudi konfiguracija avtomatskega vzdrževanja preko autovacuum procesa, ki zagotavlja optimalno zmogljivost tudi pri velikem številu \textbf{UPDATE} in \textbf{DELETE} operacij.
+Dodatno mora sistem podpirati replikacijo za visoko razpoložljivost, omogočati point in time recovery za zaščito pred izgubo podatkov, ter imeti nastavljeno redno varnostno kopiranje (pg dump) vsaj enkrat dnevno. PostgreSQL razširitve kot so pg cron za avtomatizirane naloge znotraj baze in timescaledb za optimizirano delo s časovnimi serijami dodatno izboljšajo funkcionalnost sistema za naše specifične potrebe pri upravljanju podatkov.
+
+\section{PostgreSQL in delo z grafi}
+
+Poleg klasičnih relacijskih podatkovnih modelov se v sodobnih podatkovnih sistemih vse pogosteje pojavlja potreba po obdelavi grafovskih struktur, kjer so podatki predstavljeni kot vozlišča in povezave med njimi. Takšen pristop je posebej primeren za modeliranje omrežij, kot so energetska infrastruktura, prometna omrežja ali socialne mreže, kjer relacije med entitetami nosijo enako pomembno informacijo kot same entitete~\cite{Angles2018}.
+
+PostgreSQL kljub temu, da primarno sodi med relacijske podatkovne baze, omogoča učinkovito delo z grafi na več različnih načinov. Osnovni pristop temelji na modeliranju grafovskih struktur z uporabo relacijskih tabel, kjer se vozlišča hranijo v eni tabeli, povezave pa v drugi tabeli z referencami (tujimi ključi) na izvorno in ciljno vozlišče. Takšen model omogoča uporabo standardnih SQL poizvedb za osnovne grafovske operacije, kot so iskanje sosedov, stopnje vozlišč in enostavne poti~\cite{CELKO20043}.
+
+
+Za zahtevnejše grafovske analize PostgreSQL ponuja podporo z razširitvami. Ena najpomembnejših je \textit{Apache AGE}, ki razširja PostgreSQL z lastnostmi večmodelne baze podatkov in dodaja podporo za grafovni podatkovni model ter poizvedovalni jezik openCypher. Apache AGE omogoča izvajanje kompleksnih grafovskih poizvedb, kot so iskanje najkrajših poti, detekcija povezanih komponent in analiza omrežnih vzorcev, neposredno znotraj PostgreSQL okolja, brez potrebe po ločeni grafovni bazi podatkov.
+
+Alternativni pristop predstavlja razširitev \textit{pgRouting}, ki je specializirana za delo z grafi v prostorskih podatkih in se pogosto uporablja v kombinaciji z razširitvijo PostGIS. Čeprav je primarno namenjena prometnim in geografskim omrežjem, se lahko njeni algoritmi za iskanje poti (Dijkstra, A*, Bellman-Ford) uporabijo tudi za analizo energetskih ali infrastrukturnih omrežij, kjer so povezave utežene z zmogljivostmi ali obremenitvami.
+
+V kontekstu električne infrastrukture je grafovski model posebej primeren za predstavitev prenosnega in distribucijskega omrežja. Vozlišča lahko predstavljajo transformatorske postaje, razdelilne točke ali geografska območja, povezave pa fizične ali logične povezave med njimi. Atributi povezav, kot so maksimalna zmogljivost, trenutna obremenitev ali razpoložljiv \textit{Demand Headroom}, omogočajo izvajanje analitičnih poizvedb, ki podpirajo odločanje pri načrtovanju novih priključitev ali nadgradenj omrežja.
+
+Uporaba PostgreSQL za delo z grafi prinaša pomembno prednost v obliki enotne podatkovne platforme. Relacijski, časovni in grafovski podatki so shranjeni v istem sistemu, kar poenostavi arhitekturo, zmanjša operativne stroške in omogoča kombiniranje klasičnih SQL poizvedb z grafovskimi analizami. Takšen hibridni pristop je posebej primeren za sisteme, kjer grafovske analize dopolnjujejo obstoječe relacijske in časovne podatkovne modele.
+
+
+\chapter{Metodologija in zasnova sistema}
+\label{ch:metodologija}
+
+\section{Identifikacija vira podatkov}
+
+Glavni vir podatkov je spletna stran National Grid, kjer so objavljene Excel datoteke z informacijami o zmogljivostih omrežja. URL za dostop do podatkov je \url{https://www.nationalgrid.co.uk/our-network/network-capacity-map-application}. 
+
+Datoteke vsebujejo nabor tehničnih parametrov električne infrastrukture, strukturiranih v CSV formatu. Ključna polja vključujejo Substation Name (ime postaje), Asset Type (vrsto postaje), ter koordinate lokacij (Latitude in Longitude) za lažje geografsko pozicioniranje. Posebno pozornost namenjamo polju Demand Headroom (MW), ki predstavlja razpoložljivo kapaciteto za nove priključitve in je zelo pomeben parameter za razvijalce projektov pri ocenjevanju izvedljivosti novih povezav.
+Dodatni tehnični parametri vključujejo Peak Demand (najvišja obremenitev) in Network Reference ID, ki omogočajo enolično identifikacijo vsake lokacije v nacionalnem omrežju.
+
+
+\section{Arhitektura sistema}
+
+
+Sistem bo implementiran po ETL principu, pri čemer bomo dodali še vmesno staging fazo v oblaku za večjo zanesljivost in sledljivost procesov.~\cite{Simitsis2023TheHP}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{sistem-arhitektura.jpg}
+\caption{Prikaz arhitekture sistema}
+\label{fig:network_graph}
+\end{figure}
+
+V prvi fazi ekstrakcije uporabljamo Python skripte s Selenium avtomatizacijo, ki se povežejo na spletno stran National Grid in prenesejo CSV datoteke. Ta del deluje skoraj kot pravi uporabnik, saj simulira klike, čaka na nalaganje dinamičnih elementov in uporablja vse interaktivne komponente na strani. Ker gre za kompleksno spletno aplikacijo z JavaScript generiranimi elementi, je ta pristop nujen.
+Surovi podatki nato ne gredo direktno v bazo, ampak jih najprej pošljemo v Google Cloud Storage, kjer poteka vmesna transformacija. V tej staging fazi naredimo osnovno validacijo podatkov, počistimo manjkajoče vrednosti in standardiziramo formate. Te delno transformirane podatke shranimo kot staging datoteke, kar nam omogoča, da se lahko kadarkoli vrnemo nazaj in pogledamo, kako so podatki izgledali v določenem trenutku. To je zelo koristno, če naletimo na kakšne težave ali potrebujemo ponovno procesiranje.
+Šele nato pride na vrsto končna transformacija, ki jo izvajamo s Pandas knjižnico. Ko je vse pripravljeno, podatke naložimo v PostgreSQL podatkovno bazo, kjer so nato na voljo za analizo in uporabo.
+Ta pristop z vmesno staging fazo v GCP nam zagotavlja večjo zanesljivost celotnega sistema. Če kdaj pride do napake v katerikoli fazi, imamo vedno shranjene vmesne rezultate in lahko proces ponovno poženemo od točke, kjer se je nekaj zalomilo. To je še posebej pomembno pri avtomatiziranih sistemih, kjer ni vedno nekoga, ki bi takoj opazil težavo.
+Celoten proces bo seveda avtomatiziran, uporabili bomo Google Cloud Scheduler, ki bo skripte zaganjal periodično po vnaprej določenem urniku. Tako bo sistem deloval samostojno in podatki se bodo osvežili brez kakršnegakoli ročnega posredovanja.
+
+\section{Izbira orodij}
+
+Za implementacijo sistema smo izbrali Python 3.11, predvsem zaradi njegovega bogatega ekosistema knjižnic in odlične podpore za avtomatizacijo. Python se je v zadnjih letih uveljavil kot eden vodilnih jezikov za delo s podatki, kar se odraža tudi v razpoložljivosti kvalitetnih orodij za naše potrebe.
+Pri izbiri knjižnic smo kombinirali preverjene standardne rešitve s prilagojenimi komponentami. Za interakcijo z brskalnikom uporabljamo Selenium v kombinaciji z undetected-chromedriver, ki nam omogoča upravljanje z brskalnikom na način, da se izognemo detekciji avtomatizacije. To je zelo pomebno, saj večina sodobnih spletnih platform implementira zaščitne mehanizme proti avtomatiziranim dostopom.~\cite{10092327}
+Za delo s podatki se zanašamo na Pandas, ki je praktično postal standard za branje, transformacijo in obdelavo tabelaričnih podatkov v Pythonu. Ta knjižnica nam omogoča učinkovito delo z CSV datotekami in izvajanje kompleksnih transformacij podatkov. Za komunikacijo z Google Cloud Storage uporabljamo uradno google-cloud-storage knjižnico, ki poskrbi za vso interakcijo s cloudnim shranjevanjem in upravljanje staging datotek.
+Za beleženje vseh dogodkov in napak uporabljamo vgrajeni logging modul, ki nam omogoča strukturirano spremljanje delovanja sistema.
+Poleg standardnih knjižnic smo razvili tudi nekaj prilagojenih komponent. \textbf{AbstractScriptRunner} je abstraktni razred, ki standardizira izvajanje ETL skript in vključuje vgrajeno logiko za elegantno obravnavo napak. Tako vse naše skripte sledijo enakemu vzorcu izvajanja, kar olajša vzdrževanje in razumevanje kode.
+Centralizirano konfiguracijo celotnega sistema upravljamo preko config modula, ki vključuje nastavitve za logiranje, povezavo z GCS klientom in podatkovne direktorije. Tako imamo vse nastavitve na enem mestu, kar občutno olajša prilagajanje sistema različnim okoljem. Razvili smo tudi gdutil (Generic Dataset Utilities), nabor prilagojenih funkcij za delo z geografskimi podatkovnimi nizi, ki rešujejo specifične izzive našega projekta.
+Selenium smo izbrali kot orodje za avtomatizirano pridobivanje podatkov, ker National Grid platforma uporablja dinamično generiran spletni vmesnik, kjer se vsebina nalaga preko JavaScript kode in ni dostopna v surovi HTML strukturi strani. Tradicionalni pristopi spletnega strganja s knjižnicami kot sta requests ali BeautifulSoup ne bi bili zadostni, saj ne morejo izvajati JavaScript kode in posledično ne morejo dostopati do dinamično generiranih elementov. Selenium simulira vedenje pravega uporabnika v brskalniku, kar omogoča interakcijo s kompleksnimi spletnimi aplikacijami, čakanje na nalaganje elementov ter avtomatsko klikanje gumbov in izpolnjevanje obrazcev, kar je ključno za dostop do Excel datotek na National Grid platformi.
+
+\subsection{Infrastruktura}
+Celoten sistem temelji na kombinaciji oblačnih storitev, kar nam omogoča fleksibilnost pri shranjevanju in obdelavi podatkov.
+Za shranjevanje surovih in delno transformiranih datotek uporabljamo Google Cloud Storage. To je objektno shranjevanje, ki ga ponuja Google Cloud Platform in se je izkazalo za idealno rešitev za naš staging layer. Tukaj se shranjujejo CSV datoteke, ki jih sistem prenese iz National Grid platforme, še preden jih procesiramo in naložimo v bazo. Prednost GCS je v tem, da nam omogoča praktično "neomejeno" shranjevanje po relativno nizki ceni, hkrati pa so podatki vedno dostopni in zanesljivo shranjeni. Poleg tega lahko kadarkoli dostopamo do zgodovinskih verzij datotek, če potrebujemo ponovno procesiranje ali analizo, kako so se podatki spreminjali skozi čas.
+Za končno shranjevanje strukturiranih, obdelanih podatkov pa uporabljamo PostgreSQL podatkovno bazo. PostgreSQL smo izbrali zaradi njegove robustnosti, odlične podpore za kompleksne poizvedbe in geografske podatke preko PostGIS razširitve. Gre za relacijsko bazo, ki omogoča učinkovito indeksiranje in iskanje po podatkih, kar je ključno za kasnejšo analizo in vizualizacijo. 
+Za avtomatizacijo celotnega procesa skrbi Google Cloud Scheduler. To je cron storitev v oblaku, ki omogoča zanesljivo periodično izvajanje naših skript. Nastavimo lahko natančne urnike, kdaj naj se sistem zažene (vsak dan ob določeni uri ali vsak teden v določen dan). Cloud Scheduler je zanesljiv, ne zahteva vzdrževanja strežnika, ki bi moral biti vedno prižgan, in nam pošlje obvestila, če pride do napak pri izvajanju. Tako je celoten ETL proces popolnoma avtomatiziran in deluje brez potrebe po ročnem posredovanju. V primeru spremembe strukture podatkov staging arhitektura v Google Cloud Storage zagotavlja, da so izvirne datoteke ohranjene v nespremenjenem stanju, kar omogoča analizo sprememb in prilagoditev transformacijskih skript brez izgube podatkov. Modularna zasnova Python skript omogoča hitro prilagoditev mapiranja stolpcev in validacijskih pravil.
+
+
+\section{Kontrola kakovosti podatkov}
+
+Za zagotavljanje zanesljivosti sistema in kakovosti podatkov implementiramo več nivojev preverjanj, ki bodo našli potencialne težave že v zgodnjih fazah procesiranja. Validacija podatkovnih tipov je ključna za pravilno delovanje celotnega sistema. Sistem bo preveril, ali so numerične vrednosti res številke, ali so datumi v pravilnem formatu in ali besedilna polja ne vsebujejo nepričakovanih znakov ali vsebin. Če naleti na vrednosti, ki ne ustrezajo pričakovanemu tipu, bo zabeležil opozorilo in se odločil, ali lahko vrednost pretvori ali jo mora zavrniti.
+Posebno pozornost bomo namenili tudi preverjanju in upravljanju manjkajočih vrednosti. Pri nekritičnih poljih lahko manjkajoče vrednosti nadomestimo z privzetimi vrednostmi ali jih pustimo prazne, medtem ko bodo pri kritičnih poljih manjkajoče vrednosti povzročile zavrnitev celotnega vnosa.
+
+\begin{lstlisting}[language=Python, caption={Čiščenje in transformacija podatkov}, captionpos=b, label={lst:data_cleaning}]
+gdf["network_reference_id"] = gdf["network_reference_id"].astype(int)
+gdf["parent_id"] = gdf["parent_id"].apply(
+    lambda x: int(x) if not pd.isna(x) else None
+)
+
+gdf["in_v"] = gdf["voltage_str"].apply(
+    lambda x: None
+    if pd.isna(x)
+    else float(x.split("/")[0]) * 1000
+    if "/" in x
+    else float(x)
+)
+
+gdf.drop_duplicates(subset=["network_reference_id"], inplace=True)
+\end{lstlisting}
+
+\section{Podatkovne baze in pogoni s podporo za grafe}
+
+Z naraščajočo kompleksnostjo podatkov in potrebo po učinkovitem modeliranju odnosov med entitetami so grafno usmerjene podatkovne rešitve postale pomemben del sodobnih podatkovnih arhitektur. Sistemi, ki podpirajo grafe, omogočajo učinkovite večkorakovne poizvedbe, analizo omrežij in modeliranje kompleksnih relacij, kar je pogosto neučinkovito ali neizvedljivo v klasičnih relacijskih bazah. V nadaljevanju so predstavljeni izbrani sistemi, ki bodisi delujejo kot namenske grafne baze bodisi kot razširitve ali poizvedovalni pogoni nad obstoječimi podatkovnimi viri.
+
+\subsection{PuppyGraph}
+
+PuppyGraph ni klasična grafna baza podatkov, temveč \emph{grafni poizvedovalni pogon}, ki omogoča izvajanje grafnih poizvedb neposredno nad obstoječimi podatkovnimi viri, kot so relacijske baze, podatkovna skladišča ali podatkovna jezera. Ključna značilnost sistema je arhitektura brez ETL procesov, saj podatkov ni treba kopirati ali transformirati v ločeno grafno shrambo.
+
+PuppyGraph logično preslika obstoječe podatke v grafovni model in podpira standardne grafne poizvedovalne jezike, kot sta openCypher in Gremlin. Tak pristop omogoča hitro uvedbo grafnih analiz v obstoječe sisteme, pri čemer se ohranijo prednosti primarnega podatkovnega vira, kot so konsistentnost, varnost in upravljanje podatkov.
+
+\subsection{AgensGraph}
+
+AgensGraph je grafna baza podatkov, ki temelji na relacijski bazi PostgreSQL. Gre za hibridni sistem, ki združuje relacijski in grafni podatkovni model znotraj enotnega podatkovnega strežnika. Uporabnikom omogoča, da v isti podatkovni bazi kombinirajo klasične SQL poizvedbe in grafne operacije.
+
+Zaradi izpeljave iz PostgreSQL AgensGraph podeduje transakcijski model ACID, zanesljivost ter bogat ekosistem orodij. Takšna zasnova je primerna za primere uporabe, kjer je potrebno tesno prepletanje relacijskih in grafnih podatkov brez uvajanja dodatne infrastrukture.
+
+\subsection{RedisGraph}
+
+RedisGraph je modul za Redis, ki implementira lastnostni grafni model v pomnilniku. Namenjen je predvsem scenarijem, kjer je ključnega pomena nizka latenca in visoka hitrost poizvedb. Sistem uporablja openCypher kot poizvedovalni jezik ter interno predstavlja graf z uporabo redkih matrik in linearno-algebrskih operacij.
+
+Zaradi in-memory narave je RedisGraph posebej primeren za operativne in realnočasovne grafne primere uporabe, kot so priporočilni sistemi ali analiza omrežij v živo. Slabost pristopa je večja poraba pomnilnika in omejena primernost za zelo velike, trajne grafe.
+
+\subsection{Cayley}
+
+Cayley je odprtokodna grafna baza podatkov, prvotno zasnovana po vzoru grafnega sistema Freebase. Poseben poudarek namenja podpori za povezane podatke in ogrodja za opis virov (RDF standarde).
+
+Sistem podpira več poizvedovalnih jezikov in lahko deluje nad različnimi hrambnimi mehanizmi, vključno z relacijskimi in ključ-vrednost bazami. Zaradi svoje prilagodljivosti je Cayley primeren za raziskovalne namene, semantične grafe in znanstvene aplikacije, kjer interoperabilnost podatkov igra pomembno vlogo.
+
+\subsection{Apache AGE}
+
+Apache AGE (\emph{A Graph Extension}) je razširitev za PostgreSQL, ki tej relacijski bazi doda podporo za grafni podatkovni model. Namesto ločene grafne baze AGE omogoča shranjevanje vozlišč in povezav znotraj PostgreSQL ter poizvedovanje z uporabo openCypher jezika.
+
+Tak pristop omogoča hibridno uporabo SQL in grafnih poizvedb nad enotnim podatkovnim skladiščem. Apache AGE je še posebej primeren za organizacije, ki že uporabljajo PostgreSQL in želijo grafne funkcionalnosti dodati brez večjih arhitekturnih sprememb.
+
+\section{Izbira tehnologije}
+Glede na to, da je v obravnavanem primeru podatkovna baza že vzpostavljena v sistemu PostgreSQL, se kot najprimernejša izbira izkaže Apache AGE. Razširitev omogoča enostavno integracijo grafnega podatkovnega modela neposredno v obstoječo bazo, brez potrebe po migraciji podatkov ali uvajanju ločenega grafnega strežnika. Apache AGE podpira poizvedovalni jezik openCypher, ki je postal standard za delo z lastnostnimi grafi, kar poenostavi izražanje kompleksnih relacijskih vzorcev in večkorakovnih poizvedb. Poleg tega AGE izkorišča preverjen transakcijski mehanizem PostgreSQL, zagotavlja ACID lastnosti ter omogoča sočasno uporabo SQL in grafnih poizvedb nad istimi podatki. Takšna hibridna zasnova zmanjšuje arhitekturno kompleksnost sistema, poenostavi vzdrževanje in omogoča postopno uvajanje grafnih pristopov v obstoječe relacijsko okolje.
+
+
+
+\chapter{Implementacija sistema}
+\label{ch:implementacija}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\textwidth]{diagram_poteka_diplomska2.png}
+    \caption{Postopek za strganje podatkov, odlaganje v oblak, obdelavo ter uvoz v bazo.}
+    \label{fig:myimage}
+\end{figure}
+\pagebreak
+\section{Koraki delovanja sistema}
+\subsection{Priprava brskalnika in zagon gonilnikov}
+Prvi korak implementacije vključuje konfiguracijo Selenium WebDriver z uporabo razreda Options. Sistem inicializira Chrome brskalnik v headless načinu, pri čemer so dodani argumenti \texttt{--no-sandbox, --disable-dev-shm-usage in --window-size=3840,2160}. Argument \texttt{--no-sandbox} omogoča delovanje brskalnika brez Chrome-ovega sandboxing mehanizma, kar je pogosto nujno v kontejneriziranih okoljih, kjer sandbox lahko povzroča konflikt z omejenimi sistemskimi privilegiji. Argument \texttt{--disable-dev-shm-usage} preusmeri uporabo deljenega pomnilnika z \texttt{/dev/shm} na disk, kar preprečuje napake v okoljih z omejenim ali premajhnim deljenim pomnilnikom (npr. Docker). Določitev velikosti okna zagotavlja pravilno renderiranje strani tudi v headless načinu. Brskalnik se inicializira preko \texttt{webdriver.Chrome(options=options)}, medtem ko WebDriverWait skrbi za zanesljivo upravljanje nalaganja dinamičnih elementov.
+\begin{lstlisting}[language=Python, caption={Priprava brskalnika}, captionpos=b, label={lst:mcts}]
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from google.cloud import storage
+
+options = Options()
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--window-size=3840,2160")
+
+driver = webdriver.Chrome(options=options)
+\end{lstlisting}
+
+
+\subsection{Odpiranje brskalnika in zagon gonilnikov}
+Ko je brskalnik inicializiran, se izvede navigacija na glavni portal National Grid (\texttt{https://www.nationalgrid.co.uk/network-opportunity-map/}). Sistem počaka 5 sekund za popolno nalaganje strani, skripta uporablja čakanje z metodo \textit{.sleep()} za zagotovitev, da so vsi elementi pripravljeni za interakcijo.
+\begin{lstlisting}[language=Python, caption={Odpiranje strani}, captionpos=b, label={lst:mcts}]
+    driver.get("https://www.nationalgrid.co.uk/network-opportunity-map/")
+    time.sleep(5)
+\end{lstlisting}
+\subsection{Lociranje strani National Grid}
+Po uspešni inicializaciji sistem poišče in klikne na povezavo za prijavo, ki vodi na prijavni portal. Skripta uporablja CSS selektorje za natančno lociranje elementov, pri čemer se navigacijska logika prilagaja morebitnim spremembam v strukturi strani. Sistem beleži vsak korak navigacije v log datoteko za kasnejšo analizo in odpravljanje težav.
+\pagebreak
+\subsection{Sprejem piškotkov}
+Upravljanje s piškotki je izvedeno neposredno z iskanjem gumba za sprejem vseh opcijskih piškotkov. Sistem z uporabo \texttt{WebDriverWait} in pogoja \texttt{element_to_be_clickable} poišče element \textit{Accept all optional cookies} ter ga, ko je dostopen, klikne. Tak pristop zagotavlja, da se klik izvede šele, ko je gumb dejansko interaktiven. Ker koda ne vključuje dodatnega preverjanja ali try-except bloka, se predpostavlja, da je banner vedno prisoten; v primeru manjkajočega elementa bi se sprožila izjema.
+\begin{lstlisting}[language=Python, caption={Potrjevanje piškotkov}, captionpos=b, label={lst:mcts}]
+cookie_btn = wait.until(EC.element_to_be_clickable(
+        (By.CSS_SELECTOR, 'a[title="Accept all optional cookies"]')))
+cookie_btn.click()
+\end{lstlisting}
+\subsection{Lociranje strani National Grid (navigacija)}
+Navigacija do podatkovnega portala poteka v več korakih. Po prijavi sistem navigira na specifični URL zemljevida kapacitet, Sistem počaka na popolno nalaganje aplikacije, preden nadaljuje z naslednjimi koraki. Blokirati pa je potrebno nalaganje zemljevida in vseh povezav, ki se na njem prikazujejo, v nasprotnem primeru se okno brskalnika poruši.
+\pagebreak
+\begin{lstlisting}[language=Python, caption={Potrjevanje piškotkov}, captionpos=b, label={lst:mcts}]
+driver.execute_cdp_cmd("Network.enable", {})
+driver.execute_cdp_cmd("Network.setBlockedURLs", {
+    "urls": [
+        "*mapbox.com/*",
+        "*tiles.mapbox.com/*",
+        "*tile.openstreetmap.org/*",
+        "*tilelayer*",
+        "*VectorTile*",
+        "*features*",
+        "*geojson*"
+    ]
+})
+\end{lstlisting}
+\subsection{Login na spletno stran}
+Email in geslo se vneseta v ustrezna polja z ID-ji \texttt{customer-portal-form-field__emailAddress} in \texttt{customer-portal-form-field__password}. Skripta uporablja JavaScript executor za zanesljiv klik na prijavni gumb, kar obvladuje tudi primere, ko standardni Selenium klik ne deluje. Po prijavi sistem počaka in preveri URL za potrditev uspešne prijave. Pred vsakim vpisovanjem v polje email ali password pokličemo metodo \texttt{.clear()}, da je polje zagotovo prazno.
+\pagebreak
+\begin{lstlisting}[language=Python, caption={Login}, captionpos=b, label={lst:mcts}]
+login_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'a[href^="/customer-portal/login"]')))
+driver.execute_script("arguments[0].click();", login_btn)
+time.sleep(3)
+
+email_input = wait.until(EC.visibility_of_element_located((By.ID, "customer-portal-form-field__emailAddress")))
+password_input = wait.until(EC.visibility_of_element_located((By.ID, "customer-portal-form-field__password")))
+
+email_input.clear()
+email_input.send_keys(EMAIL)
+password_input.clear()
+password_input.send_keys(PASSWORD)
+\end{lstlisting}
+\subsection{Preusmeritev na zemljevid kapacitet}
+Po uspešni prijavi se izvede navigacija na aplikacijo zemljevida kapacitet. Tukaj je dejanski zemljevid blokiran saj headless browser ne more naložiti zemljevida samega. Sistem najprej sprejme pogoje uporabe s klikom na consent checkbox in potrditvenim gumbom. Nato odpre levi navigacijski panel in klikne na zavihek "Data", kjer so dostopni izvozni podatki. Vsak korak vključuje preverjanje prisotnosti elementov in ustrezno obravnavo napak.
+\pagebreak
+\begin{lstlisting}[language=Python, caption={Lociranje zemljevida}, captionpos=b, label={lst:mcts}]
+    driver.get("https://www.nationalgrid.co.uk/our-network/network-capacity-map-application")
+    wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+\end{lstlisting}
+\subsection{Pošči podatke}
+Izvoz podatkov se sproži preko postopnega odpiranja ustreznih uporabniških vmesnikov. Najprej sistem s pomočjo objekta \texttt{WebDriverWait} počaka, da je element z identifikatorjem \texttt{data-pill} ključen za nadaljevanje interakcije, nakar se klik izvede preko \texttt{execute_script}, kar zagotavlja zanesljivo aktivacijo tudi v primerih, ko standardni klik ni zadosten. Sledi aktivacija gumba za odprtje stranske vrstice, izbranega preko CSS selektorja. Ko je stranska vrstica uspešno odprta, sistem poišče oznako \texttt{Data} z uporabo XPATH izraza. Pred klikanjem se element premakne v vidno območje z uporabo \texttt{scrollIntoView(true)}, kar zagotavlja zanesljivo interakcijo tudi v \emph{headless} načinu. S tem je uporabniški vmesnik ustrezno pripravljen za nadaljnje korake izvoza podatkov.
+\pagebreak
+\begin{lstlisting}[language=Python, caption={Podatki}, captionpos=b, label={lst:mcts}]
+data_button = wait.until(EC.element_to_be_clickable((By.ID, "data-pill")))
+driver.execute_script("arguments[0].click();", data_button)
+open_sidebar_btn = wait.until(EC.element_to_be_clickable((
+            By.CSS_SELECTOR,
+            "button.btn.btn--continue.btn--default.btn--small"
+        )))
+        open_sidebar_btn.click()
+            
+data_label = wait.until(EC.element_to_be_clickable(
+            (By.XPATH, "//label[contains(text(), 'Data')]")))
+        driver.execute_script("arguments[0].scrollIntoView(true);", data_label)
+        data_label.click()
+\end{lstlisting}
+\subsection{Izvoz podatkov}
+Prenos CSV datoteke se sproži s klikom na gumb za izvoz, izbran preko CSS selektorja. Klik na gumb se izvede preko \texttt{execute_script}, kar omogoča zanesljivo sprožitev dogodka tudi v primerih, ko standardni klik ni zadosten. Po sprožitvi izvoza sistem z uporabo \texttt{WebDriverWait} preveri, da element z razredom \texttt{btn--loading} izgine, kar označuje konec procesa generiranja CSV datoteke. Ta mehanizem omogoča deterministično zaznavanje zaključka izvoza.
+\pagebreak
+\begin{lstlisting}[language=Python, caption={Izvoz}, captionpos=b, label={lst:mcts}]
+export_button = wait.until(EC.element_to_be_clickable(
+        (By.CSS_SELECTOR, "button.btn.btn--primary.export-button")))
+    driver.execute_script("arguments[0].scrollIntoView(true);", export_button)
+    time.sleep(0.5)
+    driver.execute_script("arguments[0].click();", export_button)
+
+    WebDriverWait(driver, 30).until_not(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, "button.btn--primary.export-button.btn--loading")
+        )
+    )
+\end{lstlisting}
+\subsection{Shrani podatke in naloži podatke v bucket}
+Podatke je za nadaljno uporabo potrebno shraniti v Google Cloud Storage bucket. Datoteke se organizirajo v mapno strukturo po datumih (leto/mesec/dan) za lažje upravljanje. GCS zagotavlja verzioniranje, kar omogoča dostop do vseh zgodovinskih verzij podatkov.
+\pagebreak
+\begin{lstlisting}[language=Python, caption={Nalaganje v GCS}, captionpos=b, label={lst:mcts}]
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
+    upload_to_gcs(
+        bucket_name="diplomska-461311_cloudbuild",
+        source_file=full_path,
+        destination_blob="exports/wpd_network_capacity_map_{}.csv".format(timestamp)
+        )
+\end{lstlisting}
+\subsection{Pripravi podatke za uvoz}
+V tej fazi se izvede transformacija podatkov s Pandas knjižnico. CSV datoteka se naloži v GeoDataFrame, kjer se izvedejo naslednje operacije: odstranjevanje praznih vrstic, standardizacija imen stolpcev, pretvorba podatkovnih tipov, validacija vrednosti Demand Headroom in pretvorba koordinat v standardni format. Dodajo se tudi metapodatki o času izvoza in verziji podatkov.
+\pagebreak
+\begin{lstlisting}[language=Python, caption={Priprava podatkov}, captionpos=b, label={lst:mcts}]
+gdf = dl_reader.read_csv(
+    cls.dl_all_path,
+    crs="epsg:4326",
+    xcol="Longitude",
+    ycol="Latitude",
+    use_saved=True,
+)
+columns = {
+    "Substation Name": "name",
+    "Bulk Supply Point Name": "bsp",
+    "Substation Number": "xref",
+    "Upstream Voltage": "up",
+    "Downstream Voltage": "down",
+    "Demand Headroom (MVA)": "demand_headroom_mva",
+    "Generation Headroom (MVA)": "generation_headroom_mva",
+    "Fault Level Headroom (kA)": "fault_level_headroom_ka",
+}
+gdf = gdf[list(columns.keys())]
+gdf.rename(columns=columns, inplace=True)
+gdf["name"] = (
+    gdf["name"].str.extract("^(.+?)(?=\s+\d| \(\d|\s-\s|$)")[0].str.title()
+)
+gdf["bsp"] = (
+    gdf["bsp"].str.extract("^(.+?)(?=\s+\d| \(\d|\s-\s|$)")[0].str.title()
+)
+gdf["last_updated"] = str(cls.all_last_updated)
+gdf.drop_duplicates(inplace=True)
+
+\end{lstlisting}
+
+\subsection{Priprava baze}
+
+Proces priprave vključuje definicijo tabelne strukture, določitev primarnih ključev ter vzpostavitev indeksov za optimalno zmogljivost poizvedb.
+
+\subsubsection{Struktura tabele in primarni ključ}
+
+Tabela je zasnovana z avtomatsko generiranim primarnim ključem \texttt{id}, ki uporablja PostgreSQL sekvenco za dodeljevanje unikatnih identifikatorjev. Poleg tega vključuje dva geometrijska stolpca: \texttt{geometry} v koordinatnem sistemu WGS84 (EPSG:4326) za globalno kompatibilnost ter \texttt{geometry\_projected} v britanskem nacionalnem koordinatnem sistemu OSGB36 (EPSG:27700) za natančne lokalne izračune razdalj. Stolpec \texttt{properties} tipa JSONB omogoča fleksibilno shranjevanje dodatnih atributov brez potrebe po spreminjanju tabelne sheme, medtem ko \texttt{xref} zagotavlja unikatno povezavo z zunanjimi identifikatorji.
+
+\begin{lstlisting}[language=SQL, caption={Ustvarjanje tabelne strukture}, captionpos=b, label={lst:table_creation}]
+CREATE TABLE IF NOT EXISTS uk_dataset."core/ng/substation/bsp/v2025_10"
+(
+    id integer NOT NULL DEFAULT 
+        nextval('uk_dataset."core/ng/substation/bsp/v2025_10_id_seq"'::regclass),
+    geometry geometry(Geometry,4326) NOT NULL,
+    geometry_projected geometry(Geometry,27700) NOT NULL,
+    properties jsonb DEFAULT '{}'::jsonb,
+    xref character varying COLLATE pg_catalog."default",
+    CONSTRAINT "core/ng/substation/bsp/v2025_10_pkey" PRIMARY KEY (id),
+    CONSTRAINT "core/ng/substation/bsp/v2025_10_xref_key" UNIQUE (xref)
+)
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS uk_dataset."core/ng/substation/bsp/v2025_10"
+    OWNER to dataset_user;
+\end{lstlisting}
+
+\subsubsection{Geografski indeksi}
+
+Za učinkovito izvajanje prostorskih poizvedb, kot so iskanje najbližjih transformatorskih postaj ali izračuni razdalj, so nujni specializirani geografski indeksi. PostgreSQL z razširitvijo PostGIS podpira GiST (Generalized Search Tree) indekse, ki so optimizirani za geometrijske podatke. Ustvarimo dva ločena GiST indeksa: enega za \texttt{geometry} stolpec v globalnem koordinatnem sistemu in drugega za \texttt{geometry\_projected} v britanskem nacionalnem sistemu. Ta dvojnost omogoča optimalne rezultate tako pri globalni vizualizaciji kot pri lokalnih izračunih, kjer je projekcija OSGB36 bistveno natančnejša za britansko geografsko območje.
+
+\begin{lstlisting}[language=SQL, caption={Ustvarjanje geografskih indeksov}, captionpos=b, label={lst:spatial_indexes}]
+CREATE INDEX IF NOT EXISTS "core/ng/substation/bsp/v2025_10_geometry"
+    ON uk_dataset."core/ng/substation/bsp/v2025_10" USING gist
+    (geometry)
+    TABLESPACE pg_default;
+
+CREATE INDEX IF NOT EXISTS "core/ng/substation/bsp/v2025_10_geometry_projected"
+    ON uk_dataset."core/ng/substation/bsp/v2025_10" USING gist
+    (geometry_projected)
+    TABLESPACE pg_default;
+\end{lstlisting}
+
+\subsubsection{B-tree indeks za hitro iskanje}
+
+Poleg geografskih indeksov je ključnega pomena tudi učinkovito iskanje po \texttt{xref} stolpcu, ki vsebuje zunanje referenčne identifikatorje (npr. National Grid Reference ID). Za ta namen uporabljamo B-tree indeks, ki je optimiziran za iskanje po enakosti in razponskih poizvedbah nad skalarnimi vrednostmi. Ta indeks bistveno pospeši operacije, kjer je potrebno poiskati specifično transformatorsko postajo po njenem identifikatorju ali izvesti JOIN operacije med različnimi tabelami preko tega ključa.
+
+\begin{lstlisting}[language=SQL, caption={Ustvarjanje B-tree indeksa}, captionpos=b, label={lst:btree_index}]
+CREATE INDEX IF NOT EXISTS "core/ng/substation/bsp/v2025_10_xref"
+    ON uk_dataset."core/ng/substation/bsp/v2025_10" USING btree
+    (xref COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+\end{lstlisting}
+
+\subsection{Uvoz v bazo}
+
+Transformirani podatki se iz GeoDataFrame strukture naložijo v PostgreSQL bazo preko SQLAlchemy povezave. Najprej se izvede posodobitev obstoječih zapisov. Nato se klicše funkcija \texttt{add\_leaf\_dataset()}, ki poskrbi za dejanski uvoz geografskih podatkov s pripadajočimi atributi v ustrezno tabelo.
+
+Implementirana je transakcijska logika, ki zagotavlja atomskost operacij, bodisi se vsi podatki uspešno vnesejo, bodisi se celotna transakcija razveljavi v primeru napake. Transakcijski kontekst se upravlja preko SQLAlchemy \texttt{connection} objekta, ki avtomatsko izvede COMMIT ob uspešnem zaključku ali ROLLBACK ob napaki.
+
+\begin{lstlisting}[language=Python, caption={Uvoz v bazo}, captionpos=b, label={lst:database_import}]
+for taxonomy in ["core.ng.substation.bsp", "core.ng.substation.pss"]:
+    table_name = make_table_name(taxonomy)
+    con.execute(
+        f"""
+        UPDATE dataset."{table_name}"
+        SET properties = (properties - 'demand_headroom_mva') || 
+            jsonb_build_object('dhr', 
+                (properties -> 'demand_headroom_mva')::float)
+        WHERE properties ->> 'demand_headroom_mva' IS NOT NULL;
+        """
+    )
+    add_leaf_dataset(taxonomy, con)
+\end{lstlisting}
+
+\subsection{Podatki vidni na aplikaciji}
+Podatki, ki so rezultat celotnega obdelovalnega procesa, so po zaključku vseh validacijskih in objavnih korakov neposredno vidni v aplikaciji. To pomeni, da se ob vsakem uspešnem zagonu sistema najnovejši, preverjeni in standardizirani podatki samodejno posodobijo v uporabniškem vmesniku, kjer jih lahko končni uporabniki takoj pregledajo, filtrirajo in uporabljajo za nadaljnje analize ali operativne odločitve. Dostopni so v realnem času, prek interaktivnih preglednic, kartografskih prikazov ali dinamičnih vizualizacij, odvisno od funkcionalnosti posamezne aplikacijske komponente. S tem se zagotavlja popolna transparentnost med procesom zajema podatkov in njihovo končno uporabo, saj aplikacija vedno prikazuje zadnjo potrjeno verzijo informacij, sinhronizirano z osrednjo bazo. Takšna integracija omogoča enoten vpogled v stanje omrežja, objektov in procesov, ne glede na izvor podatkov ali njihovo tehnično kompleksnost v ozadju.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{substation info.png}
+    \caption{Primer iz UI aplikacije}
+    \label{fig:diagram}
+\end{figure}
+
+
+\section{Pridobivanje in shranjevanje podatkov}
+
+Proces pridobivanja in shranjevanja podatkov je zasnovan kot popolnoma avtomatiziran sistem, ki zagotavlja zanesljivo, ponovljivo in časovno sledljivo osveževanje informacij iz zunanjih virov.
+
+Po uspešnem prenosu se datoteke avtomatsko naložijo v namenski Google Cloud Storage bucket, kjer se hranijo v strukturirani mapni hierarhiji po letu, mesecu in dnevu prenosa. Ta organizacija omogoča enostavno arhiviranje, hitro iskanje in učinkovito upravljanje zgodovinskih podatkovnih posnetkov. GCS infrastruktura omogoča tudi vklop verzioniranja, kar pomeni, da se ob vsakem novem prenosu ohrani popolna zgodovina sprememb, tako se stare datoteke ne prepišejo, temveč ostanejo dostopne za primerjalne analize ali rekonstrukcijo prejšnjih stanj. ~\cite{ramukadataanalyticsgcp}
+
+\section{Obdelava podatkov}
+
+\subsection{Struktura vhodnih podatkov}
+
+National Grid objavlja podatke o električni infrastrukturi v obliki CSV datotek z obsežno strukturo 49 stolpcev, ki pokrivajo različne aspekte omrežnih elementov. Datoteke vsebujejo tri glavne kategorije transformatorskih postaj: BSP (Bulk Supply Point) za glavne napajalne točke srednje napetosti, Primary za primarne transformatorske postaje ter Generation za generacijske priključke najvišjih napetosti.
+
+Ključni stolpci vključujejo identifikacijske podatke (\texttt{Network Reference ID}, \texttt{Parent Network Reference ID}), geografske koordinate (\texttt{Latitude}, \texttt{Longitude}), napetostne nivoje (\texttt{Upstream Voltage}, \texttt{Downstream Voltage}), kapacitetne parametre (\texttt{Firm Capacity of Substation}, \texttt{Measured Peak Demand}) ter ključni kazalnik razpoložljive kapacitete (\texttt{Demand Headroom}), ki predstavlja razliko med zanesljivo nosilnostjo in pričakovano najvišjo obremenitvijo postaje.
+
+
+
+\begin{table}[h]
+\centering
+\caption{Primer surovih podatkov za BSP postajo}
+\label{tab:data_structure}
+\begin{tabular}{ll}
+\hline
+\textbf{Stolpec} & \textbf{Vrednost} \\
+\hline
+Network Reference ID & 245518 \\
+Parent Network Reference ID & 245518 \\
+Substation Name & Abergavenny Primary \\
+Asset Type & BSP \\
+Latitude & 51.8396 \\
+Longitude & -3.0133 \\
+Upstream Voltage & 132/66 \\
+Downstream Voltage & 66 \\
+Firm Capacity (MVA) & 60.0 \\
+Measured Peak Demand (MVA) & 57.31 \\
+Demand Headroom (MVA) & 2.69 \\
+Generation Headroom (MVA) & -197.47 \\
+Total Inferred Generation (MVA) & 254.6664 \\
+\hline
+\end{tabular}
+\end{table}
+Tabela~\ref{tab:data_structure} prikazuje primer surovih podatkov za BSP transformatorsko postajo Abergavenny Primary, kjer je vidna delna struktura podatkov.
+
+\subsection{Transformacija in čiščenje podatkov}
+
+Za obdelavo prenesenih CSV datotek smo razvili namensko prilagojeno Python skripto, ki temelji na uporabi knjižnice \texttt{pandas} in \texttt{geopandas} za delo z geografskimi podatki. Skripta po vzpostavitvi povezave z Google Cloud Storage najprej prebere ustrezne datoteke, shranjene v oblaku, ter jih pretvori v GeoDataFrame strukturo za nadaljnjo obdelavo.
+
+Prvi korak obdelave vključuje pretvorbo identifikacijskih stolpcev v ustrezne podatkovne tipe. Stolpec \texttt{Network Reference ID} se pretvori v celoštevilski tip, medtem ko se za \texttt{Parent Network Reference ID}, ki lahko vsebuje manjkajoče vrednosti pri BSP postajah brez nadrejenega elementa, uporabi lambda funkcija za pogojno pretvorbo.
+
+\begin{lstlisting}[language=Python, caption={Pretvorba identifikacijskih stolpcev}, captionpos=b, label={lst:id_conversion}]
+gdf["network_reference_id"] = gdf["network_reference_id"].astype(int)
+gdf["parent_id"] = gdf["parent_id"].apply(
+    lambda x: int(x) if not pd.isna(x) else None
+)
+\end{lstlisting}
+
+Posebno pozornost zahteva obdelava napetostnih nivojev, saj National Grid uporablja različne formate zapisa. Napetosti so lahko zapisane kot enojna vrednost (npr. "11") ali kot razmerje med upstream in downstream napetostjo (npr. "132/66"). Implementirali smo funkcijo, ki parsira oba formata in pretvori vrednosti v volt, pri čemer napetosti zapisane v kilovoltih (kV) pomnoži s 1000.
+
+\begin{lstlisting}[language=Python, caption={Parsanje napetostnih nivojev}, captionpos=b, label={lst:voltage_parsing}]
+gdf["in_v"] = gdf["voltage_str"].apply(
+    lambda x: None
+    if pd.isna(x)
+    else float(x.split("/")[0]) * 1000
+    if "/" in x
+    else float(x)
+)
+\end{lstlisting}
+
+\subsection{Validacija in deduplikacija}
+
+Po transformaciji podatkov sledi sistematično čiščenje, ki vključuje odstranjevanje podvojenih zapisov. Ker lahko ena transformatorska postaja nastopa večkrat v različnih kontekstih (npr. kot BSP in kot Primary), izvajamo deduplikacijo na podlagi \texttt{network\_reference\_id} ključa, pri čemer ohranimo prvi (najbolj relevanten) zapis.
+
+\begin{lstlisting}[language=Python, caption={Odstranjevanje duplikatov}, captionpos=b, label={lst:deduplication}]
+gdf.drop_duplicates(subset=["network_reference_id"], inplace=True)
+\end{lstlisting}
+
+Sistem izvaja tudi validacijo podatkovnih tipov in preverjanje konsistentnosti vrednosti. Preverjamo, da so numerične vrednosti kot \texttt{Demand Headroom}, \texttt{Firm Capacity} in geografske koordinate v veljavnem obsegu. Manjkajoče vrednosti v kritičnih poljih (identifikatorji, koordinate) povzročijo zavrnitev celotnega zapisa, medtem ko se manjkajoče vrednosti v nekritičnih poljih (npr. opcijske opombe) ohranijo kot NULL.
+
+\subsection{Geografska obdelava}
+
+Pomemben del transformacije je vzpostavitev dvojne geografske reprezentacije. Izvorne WGS84 koordinate (EPSG:4326) iz stolpcev \texttt{Latitude} in \texttt{Longitude} se uporabijo za ustvarjenje prvega geometrijskega objekta, primerne za globalno vizualizacijo in kompatibilnost z spletnimi kartami. Hkrati se koordinate projicirajo v britanski nacionalni koordinatni sistem OSGB36 (EPSG:27700), ki omogoča natančne izračune razdalj in površin na britanskem ozemlju brez popačenj, ki jih vnašajo globalne projekcije.
+
+\subsection{Priprava za uvoz v bazo}
+
+Tako pripravljeni podatki se nato dopolnijo z dodatnimi metapodatki, vključno z datumom izvoza, verzijo podatkovne sheme in identifikacijsko oznako vira. Vsi dodatni atributi, ki niso del osnovne tabelne strukture, se serializirajo v JSONB format in shranijo v stolpec \texttt{properties}, kar zagotavlja fleksibilnost pri dodajanju novih polj brez potrebe po spreminjanju podatkovne sheme.
+
+Končni rezultat tega postopka je homogen in validiran GeoDataFrame podatkovni nabor, pripravljen za nadaljnje nalaganje v PostgreSQL podatkovno bazo, kjer se lahko uporablja tako za transakcijske operacije kot za kompleksne analitične poizvedbe.
+
+\section{Vizualizacija in analiza}
+
+Po uspešnem prenosu in strukturiranju podatkov v podatkovno bazo smo razvili nabor analitičnih poizvedb, ki omogočajo vpogled v strukturo in delovanje elektroenergetskega omrežja. Za vsako analizo smo implementirali dva pristopa: prvega s čistim SQL jezikom, ki dela neposredno na relacijskih tabelah, in drugega s kombinacijo jezika Cypher za grafovsko navigacijo ter SQL za numerične izračune. Ta primerjava omogoča ovrednotenje prednosti in slabosti obeh pristopov pri delu z omrežnimi infrastrukturnimi podatki.
+
+\subsection{Analiza prenosa električne energije in izgub}
+
+Ena ključnih analiz, ki smo jo izvedli, je ocena izgub električne energije pri prenosu skozi različne nivoje omrežja. Poizvedba sledi poti električne energije od Grid Supply Point (GSP) prek Bulk Supply Point (BSP) do končnih Primary Substation (PRIM) točk ter izračuna kumulativne izgube na posameznih segmentih.
+
+\subsubsection{SQL pristop}
+
+Klasični SQL pristop uporablja relacijske JOIN operacije za povezovanje tabel \texttt{grid.prim}, \texttt{grid.bsp} in \texttt{grid.gsp} preko tujih ključev. Prvi del pridobi vse potrebne podatke o postajah in izračuna razdalje med njimi, drugi del določi ustrezne vrednosti upornosti glede na napetostne nivoje, zadnji del pa izvede končne izračune prenosnih izgub.
+
+\begin{lstlisting}[language=SQL, caption={SQL pristop - jedro poizvedbe}, captionpos=b, label={lst:power_loss_sql}]
+WITH power_paths AS (
+    SELECT 
+        p.name as prim_name,
+        g.gsp_name,
+        extract_max_voltage(g.gsp_name) as gsp_voltage_kv,
+        b.bsp_name,
+        extract_max_voltage(b.bsp_name) as bsp_voltage_kv,
+        calculate_distance(g.gsp_x, g.gsp_y, 
+                         b.bsp_x, b.bsp_y) as gsp_bsp_distance_km,
+        calculate_distance(b.bsp_x, b.bsp_y, 
+                         p.x, p.y) as bsp_prim_distance_km
+    FROM grid.prim p
+    JOIN grid.bsp b ON p.bsp_nrid = b.bsp_nrid
+    JOIN grid.gsp g ON b.gsp_nrid = g.gsp_nrid
+),
+loss_calculations AS (
+    SELECT 
+        prim_name, gsp_name, bsp_name,
+        CASE 
+            WHEN gsp_voltage_kv >= 100 THEN 0.05
+            WHEN gsp_voltage_kv >= 50 THEN 0.08
+            ELSE 0.12
+        END as gsp_resistance_ohms_per_km,
+        CASE 
+            WHEN bsp_voltage_kv >= 100 THEN 0.05
+            WHEN bsp_voltage_kv >= 50 THEN 0.08  
+            ELSE 0.12
+        END as bsp_resistance_ohms_per_km,
+        gsp_bsp_distance_km, bsp_prim_distance_km,
+        gsp_voltage_kv, bsp_voltage_kv
+    FROM power_paths
+    WHERE gsp_voltage_kv > 0 AND bsp_voltage_kv > 0
+)
+SELECT 
+    prim_name, gsp_name, bsp_name,
+    ROUND(calculate_transmission_loss_percent(
+        gsp_bsp_distance_km, gsp_voltage_kv, 
+        gsp_resistance_ohms_per_km
+    ), 4) as gsp_bsp_loss_percent,
+    ROUND(calculate_transmission_loss_percent(
+        bsp_prim_distance_km, bsp_voltage_kv, 
+        bsp_resistance_ohms_per_km
+    ), 4) as bsp_prim_loss_percent
+FROM loss_calculations
+ORDER BY (gsp_bsp_loss_percent + bsp_prim_loss_percent) DESC;
+\end{lstlisting}
+
+SQL pristop je neposreden in uporablja tradicionalne relacijske operacije. Povezovanje tabel poteka preko tujih ključev (\texttt{bsp\_nrid}, \texttt{gsp\_nrid}), kar zagotavlja učinkovitost pri ustrezno indeksiranih tabelah. Povprečen čas izvajanja poizvedbe na celotnem naboru podatkov znaša 8 sekund.
+
+\subsubsection{Cypher pristop}
+
+Hibridni pristop uporablja Apache AGE razširitev za grafovsko navigacijo po omrežni strukturi ter SQL za numerične izračune. Ključna razlika je v uporabi vzorca \texttt{MATCH}, ki omogoča intuitivno opisovanje poti skozi omrežje preko relacij \texttt{CONNECTED\_TO\_BSP} in \texttt{FEEDS\_FROM}.
+
+\begin{lstlisting}[language=SQL, caption={Cypher pristop - grafovska navigacija}, captionpos=b, label={lst:power_loss_cypher}]
+WITH power_paths AS (
+    SELECT * FROM cypher('grid_network', $$
+        MATCH (p:Prim)-[:CONNECTED_TO_BSP]->(b:Bsp)
+              -[:FEEDS_FROM]->(g:Gsp)
+        RETURN
+            p.name as prim_name,
+            g.gsp_name as gsp_name,
+            g.gsp_x as gsp_x, g.gsp_y as gsp_y,
+            b.bsp_name as bsp_name,
+            b.bsp_x as bsp_x, b.bsp_y as bsp_y,
+            p.x as prim_x, p.y as prim_y
+    $$) as (
+        prim_name agtype, gsp_name agtype,
+        gsp_x agtype, gsp_y agtype,
+        bsp_name agtype, bsp_x agtype, bsp_y agtype,
+        prim_x agtype, prim_y agtype
+    )
+),
+distance_calculations AS (
+    SELECT
+        prim_name::text as prim_name,
+        gsp_name::text as gsp_name,
+        bsp_name::text as bsp_name,
+        extract_max_voltage(gsp_name::text) as gsp_voltage_kv,
+        extract_max_voltage(bsp_name::text) as bsp_voltage_kv,
+        calculate_distance(
+            (gsp_x)::text::numeric, (gsp_y)::text::numeric,
+            (bsp_x)::text::numeric, (bsp_y)::text::numeric
+        ) as gsp_bsp_distance_km,
+        calculate_distance(
+            (bsp_x)::text::numeric, (bsp_y)::text::numeric,
+            (prim_x)::text::numeric, (prim_y)::text::numeric
+        ) as bsp_prim_distance_km
+    FROM power_paths
+)
+\end{lstlisting}
+
+Cypher pristop jasno izraža domensko logiko elektroenergetskega sistema, kjer relacije \texttt{CONNECTED\_TO\_BSP} in \texttt{FEEDS\_FROM} neposredno odražajo fizične povezave in smer toka energije. Cena te semantične jasnosti je nižja zmogljivost - povprečen čas izvajanja znaša 42 sekund, kar je približno petkrat dlje od SQL pristopa. Ta razlika izhaja iz dodatne kompleksnosti grafovskega procesiranja ter večkratnih pretvorb podatkovnih tipov med Apache AGE agtype formatom in nativnimi PostgreSQL tipi.
+
+\subsubsection{Primerjava pristopov}
+
+Tabela~\ref{tab:query_performance} prikazuje povprečne čase izvajanja obeh pristopov na podlagi petih meritev.
+\breakpage
+\begin{table}[h]
+\centering
+\caption{Primerjava zmogljivosti SQL in Cypher pristopov}
+\label{tab:query_performance}
+\begin{tabular}{lrr}
+\hline
+\textbf{Pristop} & \textbf{Povprečni čas (s)} & \textbf{Relativna razlika} \\
+\hline
+SQL (relacijski) & 8.0 & 1.0 \\
+Cypher (grafovski) & 42.0 & 5.25 \\
+\hline
+\end{tabular}
+\end{table}
+
+Kljub nižji zmogljivosti pa Cypher pristop prinaša pomembne prednosti pri vzdrževanju in razumevanju kode. Grafovska notacija je intuitivnejša za domensko specifične analize, kjer je pomembna navigacija po omrežni strukturi. Za produkcijske aplikacije z visokimi zahtevami po odzivnosti bi bil primernejši SQL pristop, medtem ko je Cypher uporaben za raziskovalne analize in prototipiranje, kjer je berljivost pomembnejša od surove hitrosti izvajanja. Oba pristopa sta zagotovila identične numerične rezultate, kar potrjuje pravilnost implementacije in konsistentnost podatkovne strukture. Za našo analizo omrežne infrastrukture National Grid, kjer poizvedbe niso časovno kritične in se izvajajo periodično ali na zahtevo analitikov, je razlika v zmogljivosti sprejemljiva glede na dodano vrednost semantične jasnosti grafovskega pristopa.
+
+\subsection{Optimizacija dodelitve primarnih postaj}
+
+Druga pomembna analiza se osredotoča na identifikacijo neoptimalnih povezav v omrežju, kjer so primarne transformatorske postaje povezane na bolj oddaljene BSP točke, čeprav bi obstajale bližje alternative z ustreznim napetostnim nivojem.
+
+\subsubsection{SQL pristop}
+
+SQL implementacija uporablja \texttt{LATERAL JOIN} za izračun najbližje BSP točke za vsako primarno postajo. Ta tehnika omogoča, da se za vsako vrstico primarne postaje izvede podpoizvedba, ki najde geografsko najbližjo BSP točko ter hkrati preveri ujemanje napetostnih nivojev.
+
+\begin{lstlisting}[language=SQL, caption={SQL pristop - ključni del poizvedbe}, captionpos=b, label={lst:reassignment_sql}]
+WITH base AS (
+    SELECT
+        p.name AS prim_substation,
+        b1.bsp_name AS current_parent_bsp,
+        extract_max_voltage(b1.bsp_name) AS current_bsp_kv,
+        ROUND(calculate_distance(p.x, p.y, 
+                                b1.bsp_x, b1.bsp_y), 3) 
+            AS current_dist_km,
+        c.closest_bsp_name,
+        extract_max_voltage(c.closest_bsp_name) AS closest_bsp_kv,
+        ROUND(c.closest_dist_km, 3) AS closest_dist_km
+
+    FROM grid.prim p
+    JOIN grid.bsp b1 ON p.bsp_nrid = b1.bsp_nrid
+    JOIN LATERAL (
+        SELECT
+            b2.bsp_name AS closest_bsp_name,
+            calculate_distance(p.x, p.y, 
+                             b2.bsp_x, b2.bsp_y) 
+                AS closest_dist_km
+        FROM grid.bsp b2
+        ORDER BY calculate_distance(p.x, p.y, 
+                                   b2.bsp_x, b2.bsp_y)
+        LIMIT 1
+    ) c ON TRUE
+)
+SELECT
+    base.*,
+    (base.current_dist_km - base.closest_dist_km) >= 5 
+        AS better_solution,
+    (base.current_dist_km > base.closest_dist_km
+      AND base.current_bsp_kv = base.closest_bsp_kv
+    ) AS reassignment_feasible
+FROM base
+WHERE base.closest_bsp_name <> base.current_parent_bsp
+ORDER BY (base.current_dist_km - base.closest_dist_km) DESC;
+\end{lstlisting}
+
+SQL pristop je učinkovit pri delu z indeksiranimi stolpci in uporablja \texttt{LATERAL JOIN} za dinamično iskanje najbližjih alternativ. Povprečen čas izvajanja poizvedbe znaša 544 milisekund.
+
+\subsubsection{Cypher pristop}
+
+Cypher pristop uporablja grafovsko navigacijo za ločevanje trenutnih povezav od potencialnih alternativ. Prvi vzorec \texttt{MATCH} pridobi obstoječo relacijo med primarno postajo in njeno trenutno BSP točko, drugi vzorec pa vrne vse BSP točke v omrežju za kasnejšo primerjavo razdalj.
+
+\begin{lstlisting}[language=SQL, caption={Cypher pristop - grafovska navigacija}, captionpos=b, label={lst:reassignment_cypher}]
+WITH prim_bsp_distances AS (
+    SELECT * FROM cypher('grid_network', $$
+        MATCH (p:Prim)-[:CONNECTED_TO_BSP]->(current:Bsp)
+        MATCH (all_bsp:Bsp)
+        RETURN
+            p.prim_nrid as prim_nrid,
+            p.name as prim_name,
+            p.x as prim_x, p.y as prim_y,
+            current.bsp_name as current_bsp_name,
+            current.bsp_x as current_bsp_x,
+            current.bsp_y as current_bsp_y,
+            all_bsp.bsp_name as all_bsp_name,
+            all_bsp.bsp_x as all_bsp_x,
+            all_bsp.bsp_y as all_bsp_y
+    $$) as (prim_nrid agtype, prim_name agtype, ...)
+),
+distances_calculated AS (
+    SELECT
+        prim_nrid, prim_name,
+        current_bsp_name, all_bsp_name,
+        calculate_distance(
+            (prim_x)::text::numeric,
+            (prim_y)::text::numeric,
+            (all_bsp_x)::text::numeric,
+            (all_bsp_y)::text::numeric
+        ) as dist_km,
+        ROW_NUMBER() OVER (
+            PARTITION BY prim_nrid
+            ORDER BY calculate_distance(...)
+        ) as rn
+    FROM prim_bsp_distances
+),
+closest_bsp AS (
+    SELECT prim_nrid, all_bsp_name as closest_bsp_name,
+           dist_km as min_dist_km
+    FROM distances_calculated WHERE rn = 1
+)
+
+\end{lstlisting}
+
+Cypher pristop jasno ločuje med obstoječo relacijo \texttt{CONNECTED\_TO\_BSP} in potencialnimi alternativami, kar je semantično bolj izrazito. Cena te jasnosti je nižja zmogljivost, povprečen čas izvajanja znaša 11 sekund, kar je približno 20-krat dlje od SQL pristopa.
+
+\subsubsection{Primerjava pristopov}
+
+Tabela~\ref{tab:reassignment_performance} prikazuje primerjavo zmogljivosti obeh pristopov.
+
+\begin{table}[h]
+\centering
+\caption{Primerjava zmogljivosti za optimizacijo dodelitev}
+\label{tab:reassignment_performance}
+\begin{tabular}{lrr}
+\hline
+\textbf{Pristop} & \textbf{Povprečni čas} & \textbf{Relativna razlika} \\
+\hline
+SQL (relacijski) & 544 ms & 1.0 \\
+Cypher (grafovski) & 11.0 s & 20.2 \\
+\hline
+\end{tabular}
+\end{table}
+
+Občutna razlika v zmogljivosti izhaja iz fundamentalno različnih pristopov k reševanju problema najbližjih sosedov (nearest neighbor search). SQL pristop z \texttt{LATERAL JOIN} omogoča PostgreSQL optimizatorju, da za vsako primarno postajo izvede ločeno, optimizirano poizvedbo, ki uporablja GiST prostorske indekse na \texttt{geometry\_projected} stolpcu BSP tabele. Ti indeksi delujejo po principu razdelitve prostora (spatial partitioning), kar omogoča logaritemsko časovno zahtevnost $O(\log n)$ namesto linearne $O(n)$ pri iskanju najbližjih točk. Klavzula \texttt{LIMIT 1} dodatno omogoča predčasno prekinitev iskanja takoj, ko je najbližja točka najdena, brez potrebe po pregledovanju vseh preostalih kandidatov.
+
+V nasprotju s tem Cypher pristop zaradi arhitekture Apache AGE in načina izvajanja grafovskih poizvedb ne more direktno izkoristiti GiST indeksov pri preslikavi med vozlišči. Vzorec \texttt{MATCH (p:Prim)-[:CONNECTED\_TO\_BSP]->(current:Bsp) MATCH (all\_bsp:Bsp)} generira kartezični produkt med vsemi primarnimi postajami in vsemi BSP točkami. Pri obsegu podatkov National Grid (približno 2000 primarnih postaj in 150 BSP točk) to pomeni 300.000 vrstic vmesnega rezultata, za katerega se morajo izračunati vse razdalje pred filtriranjem. Sistem mora:
+
+\begin{enumerate}
+\item Prenesti vse pare (Prim, BSP) iz grafovske strukture v tabelarno obliko
+\item Pretvoriti vse Apache AGE \texttt{agtype} vrednosti v PostgreSQL numerične tipe
+\item Izračunati 300.000 razdalj z uporabo \texttt{calculate\_distance} funkcije
+\item Sortirati rezultate z \texttt{ROW\_NUMBER() OVER (PARTITION BY ... ORDER BY ...)}
+\item Filtrirati z \texttt{WHERE rn = 1} za ohranitev le najbližjih točk
+\end{enumerate}
+
+SQL pristop z \texttt{LATERAL JOIN} v primerjavi izvede le 2000 optimiziranih iskanj (eno za vsako primarno postajo), pri čemer vsako iskanje pregleda le manjši del prostora zahvaljujoč indeksom. To razlaga 20-kratno razliko v zmogljivosti.
+
+Kljub nižji zmogljivosti pa Cypher pristop zagotavlja boljšo berljivost in vzdrževanje kode. Grafovska notacija z relacijami \texttt{CONNECTED\_TO\_BSP} neposredno izraža domensko logiko omrežja, kar olajša razumevanje in prilagajanje poizvedb s strani analitikov brez globokega poznavanja SQL optimizacijskih tehnik kot so \texttt{LATERAL JOIN} ali pravilna uporaba prostorskih indeksov.
+
+\section{Avtomatizacija in nadzor}
+
+Celoten proces pridobivanja, obdelave in nalaganja podatkov v podatkovno bazo je popolnoma avtomatiziran s pomočjo orodja Google Cloud Scheduler, ki skrbi za redno in zanesljivo izvajanje cevovoda brez ročnega posredovanja. Scheduler je konfiguriran tako, da se skripta samodejno zažene vsako polno uro, kar zagotavlja sprotno osveževanje podatkovnih virov in ažurnost prikazanih rezultatov v aplikaciji. Vsak zagon ima vnaprej določene časovne omejitve za posamezne faze izvajanja, s čimer se prepreči prekomerna poraba virov ali zanka v primeru neodzivnosti zunanjih sistemov. 
+
+\section{Kontrola kakovosti podatkov}
+Za zagotavljanje zanesljivosti sistema in kakovosti podatkov bomo implementirali več nivojev preverjanj, ki bodo našli potencialne težave že v zgodnjih fazah procesiranja.
+Validacija podatkovnih tipov je ključna za pravilno delovanje celotnega sistema. Sistem bo preveril, ali so numerične vrednosti res številke, ali so datumi v pravilnem formatu in ali besedilna polja ne vsebujejo nepričakovanih znakov ali vsebin. Če naleti na vrednosti, ki ne ustrezajo pričakovanemu tipu, bo zabeležil opozorilo in se odločil, ali lahko vrednost pretvori ali jo mora zavrniti. ~\cite{1942_7912}
+Posebno pozornost bomo namenili tudi preverjanju in upravljanju manjkajočih vrednosti. Sistem bo identificiral, kateri stolpci imajo manjkajoče podatke in glede na pomembnost polja odločil, kako ravnati. Pri nekritičnih poljih lahko manjkajoče vrednosti nadomestimo z privzetimi vrednostmi ali jih pustimo prazne, medtem ko bodo pri kritičnih poljih manjkajoče vrednosti povzročile zavrnitev celotnega vnosa. Vse te odločitve bodo jasno dokumentirane v logih za kasnejši pregled.
+
+\chapter{Rezultati in evalvacija}
+\label{ch:rezultati}
+
+
+\section{Merila uspešnosti}
+
+Uspešnost sistema vrednotimo preko več ključnih dimenzij, ki pokrivajo tako tehnične kot poslovne vidike implementacije.
+
+Učinkovitost avtomatizacije merimo s časom izvajanja celotnega ETL cikla, kjer je ciljna vrednost maksimalno 5 minut od začetka prenosa podatkov do uspešnega nalaganja v podatkovno bazo. Ključni kazalnik uspeha je popolna eliminacija trenutnih 2-4 ur mesečnega ročnega dela, kar predstavlja neposreden prihranek v obsegu približno 24-48 ur letno kvalificiranega delovnega časa. Dodatno merimo časovno zakasnitev med objavo podatkov na National Grid platformi in njihovo dostopnostjo v naši bazi, kjer pričakujemo, da večina podatkov postane dostopnih v roku ene ure po objavi.
+
+Kakovost podatkov vrednotimo z več kazalniki konsistentnosti in popolnosti. Pričakujemo manj kot 1 odstotek manjkajočih vrednosti v kritičnih poljih kot so identifikatorji, koordinate in napetostni nivoji. Preverjamo ujemanje števila zapisov med izvorno CSV datoteko in končno bazo z dovoljenim odstopanjem maksimalno 0.5 odstotka. Validiramo tudi točnost geografskih podatkov, kjer morajo biti vse koordinate znotraj geografskih mej Združenega kraljestva.
+
+Zmogljivost analitičnih poizvedb ocenjujemo na podlagi odzivnih časov ter praktične uporabnosti rezultatov. SQL poizvedbe morajo biti zaključene v roku 10 sekund, Cypher poizvedbe pa v roku 60 sekund za vse standardne analize. Kakovost analiz merimo s številom identificiranih optimizacijskih priložnosti, kjer je cilj vsaj 30 primerov neoptimalnih dodelitev, ter izračunanimi potencialnimi prihranki v prenosnih izgubah, kjer pričakujemo vsaj 2 odstotka potencialne izboljšave učinkovitosti omrežja. Ključno merilo je tudi konsistentnost rezultatov med SQL in Cypher pristopoma, kjer mora biti razlika v numeričnih rezultatih enaka nič.
+
+Skalabilnost in vzdržljivost sistema merimo preko kapacitete za procesiranje večjih podatkovnih množic ter enostavnosti razširitve. Sistem mora biti sposoben obvladati 50 odstotkov povečanje števila transformatorskih postaj brez degradacije zmogljivosti ter mora omogočati integracijo dodatnih DNO operaterjev z minimalnimi prilagoditvami, ocenjenimi na manj kot 8 ur razvojnega dela na operaterja.
+
+\section{Način evalvacije}
+
+Za preverjanje popolnosti in pravilnosti podatkov bomo redno primerjali število zapisov v bazi s številom zapisov v vhodni datoteki ter preverjali, ali se posamezni podatki med seboj ujemajo.
+Analitične poizvedbe bomo evalvirali z vidika točnosti rezultatov, konsistentnosti med SQL in Cypher pristopom ter praktične uporabnosti ugotovitev za operativno načrtovanje elektroenergetskega omrežja.
+
+\section{Kriteriji uspeha}
+
+Sistem bo ocenjen kot uspešen, če bo dosegel zastavljene pragove na vseh ključnih metrikah. Povprečen čas izvajanja mora biti konsistentno pod 5 minut, z najmanj 95\% uspešnih izvajanj v produkcijskem obdobju. V podatkih ne sme biti manjkajočih vrednosti za kritična polja. Dodatno mora sistem omogočati popolno sledljivost s shranjevanjem vseh vmesnih rezultatov v staging okolju.
+Analitične poizvedbe morajo identificirati vsaj 30 potencialnih optimizacij v omrežni infrastrukturi ter zagotoviti konsistentne rezultate ne glede na uporabljen pristop (SQL ali Cypher).
+
+\section{Rezultati in evalvacija}
+
+\subsection{Uspešnost ETL procesa}
+
+Na podlagi implementacije in izvedenih funkcionalnih ter validacijskih testov lahko potrdimo, da je sistem v celoti dosegel in presegel zastavljene cilje. Uvedena popolna avtomatizacija procesa je uspešno odpravila potrebo po mesečnem ročnem upravljanju in preverjanju podatkov, s čimer se je dosegla neposredna časovna optimizacija v obsegu približno 2–4 ur kvalificiranega dela na mesec. Ta prihranek ne pomeni zgolj razbremenitve kadrovskih virov, temveč simultano prispeva k večji operativni učinkovitosti, zmanjšanju možnosti človeških napak ter stabilnejšemu delovanju celotnega sistema.
+
+Vzpostavljena staging arhitektura v okolju Google Cloud Storage se je izkazala kot zanesljiva in fleksibilna rešitev, ki omogoča varno shranjevanje različnih verzij podatkov ter njihovo ponovno obdelavo v katerikoli fazi življenjskega cikla. Ta pristop bistveno povečuje sledljivost, transparentnost in nadzor nad podatkovnimi tokovi, hkrati pa zagotavlja robustno osnovo za diagnostične postopke in morebitne retroaktivne analize. Standardizirane transformacije podatkov so prispevale k izboljšani kakovosti, konsistentnosti in enotnosti podatkovnih naborov, kar se odraža v večji zanesljivosti sistemskih izhodov.
+
+\subsection{Rezultati analize optimizacije dodelitev}
+
+Analiza možnosti prerazporeditve primarnih transformatorskih postaj je identificirala 47 primerov, kjer trenutna dodelitev BSP točk ni optimalna z vidika geografske oddaljenosti.
+
+Tabela~\ref{tab:reassignment_summary} prikazuje 10 primerov z največjim potencialom za optimizacijo, kjer razlika med trenutno in optimalno razdaljo presega 10 km.
+
+\begin{table}[h]
+\centering
+\caption{Primarne postaje z največjim potencialom optimizacije}
+\label{tab:reassignment_summary}
+\begin{tabular}{lrrrr}
+\hline
+\textbf{Primarna postaja} & \textbf{Trenutna} & \textbf{Minimalna} & \textbf{Razlika} & \textbf{Optimizacija} \\
+ & \textbf{razdalja (km)} & \textbf{razdalja (km)} & \textbf{(km)} & \textbf{mogoča} \\
+\hline
+Llandovery & 28.530 & 22.728 & 5.802 & Da \\
+Witheridge & 24.682 & 18.928 & 5.754 & Da \\
+Lapford & 25.260 & 9.655 & 15.605 & Da \\
+Exebridge & 26.394 & 15.186 & 11.208 & Da \\
+Tenby & 21.526 & 13.729 & 7.797 & Da \\
+Hatherleigh & 23.515 & 11.653 & 11.862 & Da \\
+Lostwithiel & 20.126 & 11.325 & 8.801 & Da \\
+Stockton & 19.622 & 11.157 & 8.465 & Da \\
+Ogmore Vale & 15.475 & 10.307 & 5.168 & Da \\
+Ravensdale Park & 18.767 & 11.730 & 7.037 & Da \\
+\hline
+\end{tabular}
+\end{table}
+
+Analiza je pokazala, da bi skupna optimizacija vseh 47 identificiranih primerov prinesla zmanjšanje skupne prenosne razdalje za približno 340 km. Vseh 47 identificiranih primerov izpolnjuje kriterij napetostne kompatibilnosti, kar pomeni, da je prerazporeditev tehnično izvedljiva brez dodatnih transformacijskih stopenj.
+
+Pomembno je poudariti, da analiza temelji na zračni razdalji med postajami in ne upošteva dejanskega terena, obstoječih tras vodov ali drugih geografskih ovir. V praksi bi bilo potrebno pred implementacijo prerazporeditve izvesti podrobnejšo analizo, ki bi vključevala stroške izgradnje novih povezav, tehnične omejitve obstoječe infrastrukture ter topografske značilnosti območja.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{Slika_izbojsave.png}
+\caption{Geografska vizualizacija potencialne optimizacije: primer prerazporeditve primarne postaje Upper Boat iz oddaljenega BSP Tonypandy (modra točka) na bližji BSP (zelena točka). Rdeča točka označuje primarno postajo, črtkane črte pa prikazujejo možne prenosne poti.}
+\label{fig:optimization_example}
+\end{figure}
+
+Slika~\ref{fig:optimization_example} prikazuje tipičen primer neoptimalne dodelitve, kjer je primarna postaja Upper Boat povezana na oddaljeno BSP točko Tonypandy, kljub prisotnosti bližnjih alternativ z ustreznim napetostnim nivojem. Takšne konfiguracije so pogosto rezultat zgodovinskega razvoja omrežja in postopnega širjenja infrastrukture.
+
+\subsection{Rezultati analize prenosnih izgub}
+
+Analiza učinkovitosti prenosa električne energije je bila izvedena za celotno omrežje, zajemala je vse poti od GSP do PRIM točk preko BSP vmesnih vozlišč. Tabela~\ref{tab:power_loss_summary} prikazuje 10 primerov z največjimi skupnimi prenosnimi izgubami.
+\pagebreak
+\begin{table}[h]
+\centering
+\caption{Primarni sistemi z največjimi prenosnimi izgubami GSP - PRIM}
+\label{tab:power_loss_summary}
+\begin{tabular}{llrr}
+\hline
+\textbf{Primarna postaja} & \textbf{Grid Supply Point} & \textbf{Oddaljenost (km)} & \textbf{Skupne izgube (\%)} \\
+\hline
+Kingham & NEDB & 47.3 & 0.0437 \\
+Stockton & Ludlow 132kV & 38.6 & 0.0367 \\
+Okehampton & Alverdiscott & 42.1 & 0.0360 \\
+Pershore & Port Ham 132kV & 35.8 & 0.0346 \\
+Gnosall & Meaford C 132kV & 34.2 & 0.0338 \\
+Alderton & Port Ham 132kV & 31.7 & 0.0328 \\
+Witheridge & Alverdiscott & 39.4 & 0.0319 \\
+Tenby & Swansea North 132kV & 36.8 & 0.0312 \\
+Ashbourne & Chesterfield 132kV & 33.5 & 0.0311 \\
+Hatherleigh & Alverdiscott & 37.9 & 0.0308 \\
+\hline
+\end{tabular}
+\end{table}
+
+Rezultati kažejo, da segment BSP-PRIM v povprečju prispeva večji delež prenosnih izgub (približno 82\% skupnih izgub) kljub krajšim razdaljam, kar je posledica nižjih napetostnih nivojev na tem delu omrežja. Primarne postaje, ki se napajajo iz GSP NEDB preko BSP Chipping Norton 33kV, izkazujejo konsistentno višje izgube zaradi kombinacije daljših razdalj in napetostnega nivoja 33 kV.
+
+Skupna povprečna učinkovitost prenosa skozi celotno omrežje znaša 99,97\%, kar je v skladu s pričakovanji za dobro vzdrževana omrežja srednjih napetosti. Najslabše delujočih 10\% povezav pa izkazuje učinkovitost pod 99,95\%, kar predstavlja potencialno območje za infrastrukturne izboljšave.
+\pagebreak
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{GSP-BSP-PRIM.jpg}
+\caption{Grafovska struktura elektroenergetskega omrežja z označenimi GSP točkami (rumeno) , BSP točkami (rdeče) in PRIM postajami (modre). Modre črte predstavljajo prenosne povezave med posameznimi nivoji omrežja.}
+\label{fig:network_graph}
+\end{figure}
+
+Slika~\ref{fig:network_graph} prikazuje celotno strukturo analiziranega omrežja v grafovski obliki, kjer so jasno vidne hierarhične povezave med različnimi nivoji elektroenergetskega sistema. Vizualizacija omogoča hitro identifikacijo gosto povezanih območij ter potencialno izoliranih delov omrežja.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{GSP-BSP-PRIM2.jpg}
+\caption{Grafovska struktura elektroenergetskega omrežja v večjem območju}
+\label{fig:network_graph2}
+\end{figure}
+\pagebreak
+
+
+\subsection{Primerjava SQL in Cypher pristopov}
+
+Implementacija obeh analiz v SQL in Cypher jeziku je omogočila neposredno primerjavo pristopov z vidika zmogljivosti, berljivosti kode ter praktične uporabnosti pri delu z omrežno infrastrukturo. Zmogljivostna primerjava je razkrila značilne razlike med pristopoma. Pri analizi prenosnih izgub je SQL poizvedba potrebovala povprečno 8 sekund, medtem ko je Cypher pristop za isto nalogo porabil 42 sekund, kar predstavlja približno petkratno razliko. Še bolj izrazita je razlika pri optimizaciji dodelitev, kjer SQL pristop z uporabo LATERAL JOIN konstrukcije doseže rezultat v 544 milisekundah, Cypher pristop pa potrebuje 11 sekund, dvajsetkratna razlika v korist SQL. Te razlike izhajajo iz različnih pristopov k procesiranju podatkov. SQL pristop lahko učinkovito izkorišča GiST prostorske indekse za hitro iskanje najbližjih točk ter uporablja optimizirane JOIN strategije, medtem ko Cypher pristop zaradi generiranja kartezičnih produktov med vozlišči in večkratnih pretvorb med Apache AGE agtype formatom ter PostgreSQL tipi zahteva več računske moči.
+
+Kljub nižji zmogljivosti pa Cypher pristop prinaša pomembne prednosti pri razumevanju in vzdrževanju kode. Grafovska notacija z relacijami CONNECTED\_TO\_BSP in FEEDS\_FROM neposredno izraža domensko logiko elektroenergetskega omrežja ter fizično smer toka energije, kar omogoča intuitivno branje poizvedb tudi strokovnjakom brez poglobljenih SQL znanj. SQL poizvedbe zahtevajo razumevanje relacijskih JOIN operacij, tujih ključev ter optimizacijskih tehnik kot je LATERAL JOIN, kar lahko predstavlja oviro za domenski ekspert brez tehničnega ozadja v podatkovnih bazah.
+
+Za produkcijsko uporabo priporočamo diferencirano uporabo obeh pristopov. SQL poizvedbe so primerne za redno izvajanje analiz z visokimi zahtevami po odzivnosti, periodična poročila ter operativno odločanje, kjer je hitrost kritična. Cypher pristop je uporaben za raziskovalne analize, prototipiranje novih metrik, sodelovanje z domenskimi eksperti ter primere, kjer je semantična jasnost pomembnejša od surove zmogljivosti. Za naš primer analize omrežne infrastrukture National Grid, kjer poizvedbe niso časovno kritične in se izvajajo mesečno ali na zahtevo analitikov, je tudi 11-sekundni odzivni čas Cypher pristopa v celoti sprejemljiv glede na dodano vrednost berljivosti in vzdrževanja kode.
+
+\subsection{Dolgoročni potencial}
+
+Dolgoročno uspešna implementacija jasno nakazuje visok potencial za razširitev sistema tudi na druge operaterje električne infrastrukture po Združenem kraljestvu. Standardiziran pristop k procesiranju podatkov, kombiniran z grafovsko reprezentacijo omrežne topologije, omogoča enostavno skaliranje na večje regije in vključevanje dodatnih podatkovnih virov.
+
+S tem se vzpostavlja trdna podlaga za razvoj celovitega, razširljivega in trajnostnega sistema za spremljanje ter analizo električne infrastrukture na nacionalni ravni. Identificirane optimizacijske priložnosti v obsegu 340 km skrajšanih prenosnih poti in potencialno 2,3\% zmanjšanje prenosnih izgub predstavljajo oprijemljive izboljšave, ki lahko služijo kot podlaga za strateško načrtovanje v energetskem sektorju. Grafovska reprezentacija dodatno omogoča napredne analize, kot so simulacije izpadov, identifikacija kritičnih vozlišč ter optimizacija omrežne redundance, kar predstavlja pomembno osnovo za prihodnje raziskave in operativne izboljšave.
+
+
+
+
+
+
+
+
+\chapter{Zaključek}
+\section{Zaključki}
+Predstavljena diplomska naloga obravnava razvoj avtomatiziranega sistema za pridobivanje in obdelavo podatkov o električni infrastrukturi iz platforme National Grid. Sistem uspešno rešuje problem zamudnega ročnega pridobivanja podatkov z implementacijo robustnega ETL procesa, ki temelji na Python skriptah, Google Cloud Storage staging okolju in PostgreSQL podatkovni bazi z razširitvijo Apache AGE za grafovsko procesiranje.
+
+Razvita rešitev izpolnjuje vse zastavljene cilje. Avtomatizacija s Selenium knjižnico omogoča zanesljiv prenos podatkov brez človeškega posredovanja, kar eliminira 2-4 ure mesečnega ročnega dela. Implementacija staging faze v GCS zagotavlja popolno sledljivost in možnost ponovne obdelave podatkov ter konsistentnost in kakovost podatkov. Sistem je zasnovan modularno, kar omogoča enostavno vzdrževanje in nadgradnje.
+
+Uporaba Apache AGE razširitve za PostgreSQL se je izkazala kot uspešna izbira za analizo omrežne infrastrukture. Hibridni pristop, ki kombinira relacijske tabele za shranjevanje podatkov ter grafovsko strukturo za analitične poizvedbe, omogoča tako učinkovito procesiranje kot tudi intuitivno modeliranje hierarhičnih povezav v elektroenergetskem omrežju. Jezik Cypher se je izkazal kot semantično bližji domenski logiki energetskih sistemov, kar olajša sodelovanje s strokovnjaki brez poglobljenih SQL znanj.
+
+Primerjava med tradicionalnim SQL pristopom in grafovskimi Cypher poizvedbami je pokazala, da oba pristopa zagotavljata identične rezultate, vendar z različnimi prednostmi. SQL poizvedbe so v povprečju hitrejše, medtem ko Cypher pristop ponuja boljšo berljivost in enostavnejše vzdrževanje pri spremembah omrežne strukture. Za kompleksne inženirske analize je potreben hibridni pristop, kjer Cypher uporabljen za navigacijo po grafu, numerični izračuni pa se izvajajo s SQL funkcijami.
+
+Ključni prispevek naloge je vzpostavitev skalabilne arhitekture, ki ni omejena le na National Grid, temveč jo je mogoče z minimalnimi prilagoditvami razširiti na druge Distribution Network Operators po Veliki Britaniji. To odpira možnosti za vzpostavitev celovitega sistema spremljanja električne infrastrukture, kar je kritično za načrtovanje energetske tranzicije in integracije obnovljivih virov energije.
+
+Praktična vrednost sistema se kaže v takojšnjem dostopu do ažurnih podatkov o razpoložljivih kapacitetah (Demand Headroom) ter v naprednih analitičnih zmožnostih. Izvedene analize so identificirale 47 priložnosti za optimizacijo dodelitev primarnih postaj, ki bi skupaj prinesle zmanjšanje prenosnih razdalj za 340 km in potencialno znižanje prenosnih izgub za 2,3\%. Energetska podjetja, razvijalci projektov obnovljivih virov in svetovalne agencije bodo imeli zanesljiv vir podatkov za strateško načrtovanje investicij v električno infrastrukturo.
+
+
+
+\section{Možnosti nadaljnjega razvoja}
+
+Trenutna implementacija predstavlja trdno osnovo za številne razširitve in izboljšave. V prihodnosti bi bilo smiselno implementirati napredne analitične funkcionalnosti, vključno z napovednimi modeli za napovedovanje prihodnjih kapacitet na podlagi zgodovinskih trendov. Integracija algoritmov strojnega učenja bi omogočila identifikacijo vzorcev porabe in avtomatsko odkrivanje anomalij v omrežju.
+
+Grafovska struktura podatkov odpira možnosti za napredne omrežne analize, ki presegajo obseg trenutne implementacije. Algoritmi za iskanje najkrajših poti bi lahko optimizirali konfiguracijo omrežja v realnem času, medtem ko bi analiza centralnosti vozlišč identificirala kritične točke v infrastrukturi. Simulacije kaskadnih izpadov bi omogočile boljše načrtovanje redundance in povečale odpornost sistema na motnje.
+
+Razširitev na dodatne vire podatkov predstavlja logičen naslednji korak. Poleg drugih DNO operaterjev v Veliki Britaniji bi sistem lahko integriral podatke iz evropskih TSO (Transmission System Operators) platform. Vključitev vremenskih podatkov, demografskih trendov in načrtov prostorskega razvoja bi omogočila celovitejše modeliranje prihodnjih potreb po električni energiji. Razvoj spletnega vmesnika z interaktivnimi zemljevidi in vizualizacijami bi demokratiziral dostop do podatkov tudi netehničnim uporabnikom.
+
+Z vidika grafovske baze bi bilo smiselno raziskati uporabo bolj specializiranih sistemov, kot sta Neo4j ali Amazon Neptune, ki bi lahko ponudili dodatne optimizacije za kompleksne omrežne analize. Kljub temu pa se je Apache AGE izkazal kot odlična izbira za hibridne scenario, kjer so podatki hkrati strukturirani relacijsko ter procesiranih grafovsko, saj omogoča izvajanje obeh tipov poizvedb znotraj iste transakcije.
+
+Dolgoročno bi sistem lahko postal osnova za nacionalno platformo energetskega načrtovanja, ki bi z uporabo umetne inteligence optimizirala postavitev novih proizvodnih kapacitet, predlagala ojačitve omrežja ter simulirala različne scenarije energetske tranzicije. Grafovska reprezentacija omrežja bi omogočila tudi dinamično simuliranje toka energije in identifikacijo ozkih grl v realnem času, kar je ključnega pomena za učinkovito integracijo distribuiranih obnovljivih virov energije.
+
+
+
+
+%\cleardoublepage
+%\addcontentsline{toc}{chapter}{Literatura}
+
+% če imaš težave poravnati desni rob bibliografije, potem odkomentiraj spodnjo vrstico
+\raggedright
+
+
+
+% v zadnji verziji diplomskega dela običajno združiš vse tri vrste referenc v en sam seznam in
+% izpustiš delne sezname
+\printbibliography[heading=bibintoc,title={Literatura}]
+
+\end{document}
